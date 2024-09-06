@@ -1,41 +1,50 @@
-name: 'openpilot env setup'
+name: "openpilot env setup"
 
 inputs:
-  docker_hub_pat:
-    description: 'Auth token for Docker Hub, required for BuildJet jobs'
-    required: true
-    default: ''
   is_retried:
-    description: 'A mock param that asserts that we use the setup-with-retry instead of this action directly'
+    description: "A mock param that asserts that we use the setup-with-retry instead of this action directly"
     required: false
-    default: 'false'
+    default: "false"
 
 runs:
   using: "composite"
   steps:
-    # assert that this action is retried using the setup-with-retry
     - shell: bash
       if: ${{ inputs.is_retried == 'false' }}
       run: |
         echo "You should not run this action directly. Use setup-with-retry instead"
-        exit 1
 
-    # do this after checkout to ensure our custom LFS config is used to pull from GitLab
     - shell: bash
       run: git lfs pull
 
-    # on BuildJet runners, must be logged into DockerHub to avoid rate limiting
-    # https://buildjet.com/for-github-actions/docs/guides/docker
+    - name: Set up APT cache
+      id: apt-cache
+      uses: actions/cache@v4
+      with:
+        path: /var/cache/apt
+        key: apt-${{ runner.os }}-${{ env.CACHE_COMMIT_DATE }}
+        restore-keys: |
+          apt-${{ runner.os }}
+
     - shell: bash
-      if: ${{ contains(runner.name, 'buildjet') && inputs.docker_hub_pat == '' }}
+      run: echo "CACHE_COMMIT_DATE=$(git log -1 --pretty='format:%cd' --date=format:'%Y-%m-%d-%H:%M')" >> $GITHUB_ENV
+
+    - shell: bash
       run: |
-        echo "Need to set the Docker Hub PAT secret as an input to this action"
-        exit 1
-    - name: Login to Docker Hub
-      if: contains(runner.name, 'buildjet')
+        ./tools/install_ubuntu_dependencies.sh
+        curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+        python3.10 get-pip.py
+        pip install pip setuptools wheel
+        start=`date +%s`
+        pip install -r .github/workflows/setup/requirements.txt
+        end=`date +%s`
+        runtime=$((end-start))
+        echo "Installing dependencies $runtime seconds"
+
+    - name: Git configuration
       shell: bash
       run: |
-        docker login -u adeebshihadeh -p ${{ inputs.docker_hub_pat }}
+        sudo git config --global --add safe.directory /tmp/openpilot
 
     # build cache
     - id: date
@@ -58,6 +67,3 @@ runs:
       run: |
         find . -type f -executable -not -perm 755 -exec chmod 755 {} \;
         find . -type f -not -executable -not -perm 644 -exec chmod 644 {} \;
-    # build our docker image
-    - shell: bash
-      run: eval ${{ env.BUILD }}
