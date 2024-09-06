@@ -37,10 +37,10 @@ runs:
     - shell: bash
       run: |
         ./tools/install_ubuntu_dependencies.sh
-        pip --version
         curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-        python3 get-pip.py
+        pip --version
         pip install pip setuptools wheel
+        python3 get-pip.py
         start=`date +%s`
         pip install -r .github/workflows/setup/requirements.txt
         end=`date +%s`
