@@ -34,9 +34,9 @@ runs:
         ./tools/install_ubuntu_dependencies.sh
         curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
         python3.10 get-pip.py
-        pip install pip setuptools wheel
-        python -m venv env
+        python3.10 -m venv env
         source env/bin/activate
+        pip install pip setuptools wheel
         start=`date +%s`
         pip install -r .github/workflows/setup/requirements.txt
         end=`date +%s`
