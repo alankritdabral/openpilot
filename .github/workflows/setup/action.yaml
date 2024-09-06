@@ -29,13 +29,17 @@ runs:
     - shell: bash
       run: echo "CACHE_COMMIT_DATE=$(git log -1 --pretty='format:%cd' --date=format:'%Y-%m-%d-%H:%M')" >> $GITHUB_ENV
 
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+        cache: 'pip'
     - shell: bash
       run: |
         ./tools/install_ubuntu_dependencies.sh
+        pip --version
         curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-        python3.10 get-pip.py
-        python3.10 -m venv env
-        source env/bin/activate
+        python3 get-pip.py
         pip install pip setuptools wheel
         start=`date +%s`
         pip install -r .github/workflows/setup/requirements.txt
@@ -69,9 +73,3 @@ runs:
       run: |
         find . -type f -executable -not -perm 755 -exec chmod 755 {} \;
         find . -type f -not -executable -not -perm 644 -exec chmod 644 {} \;
-
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.x'
-        cache: 'pip'
