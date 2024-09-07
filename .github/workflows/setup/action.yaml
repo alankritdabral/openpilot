@@ -40,6 +40,7 @@ runs:
         sudo apt-get install -y x11-xserver-utils
         pip --version
         start=`date +%s`
+        ./tools/install_python_dependencies.sh
         pip install -r .github/workflows/setup/requirements.txt
         end=`date +%s`
         runtime=$((end-start))
