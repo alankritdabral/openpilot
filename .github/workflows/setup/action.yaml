@@ -46,8 +46,8 @@ runs:
     - shell: bash
       run: |
         uv python install
-        uv venv
-        source .venv/bin/activate
+        python3 -m venv myenv
+        source myenv/bin/activate
         uv pip install -r '.github/workflows/setup/requirements.txt'
 
     - name: Git configuration
