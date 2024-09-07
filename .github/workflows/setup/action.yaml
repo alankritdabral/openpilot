@@ -38,11 +38,12 @@ runs:
         sudo apt-get install -y x11-xserver-utils
 
     - name: Install uv
-    - shell: bash
       uses: astral-sh/setup-uv@v2
       with:
         enable-cache: true
         cache-dependency-glob: "requirements**.txt"
+
+    - shell: bash
       run: |
         uv python install
         uv pip install -r '.github/workflows/setup/requirements.txt'
@@ -56,8 +57,10 @@ runs:
     - id: date
       shell: bash
       run: echo "CACHE_COMMIT_DATE=$(git log -1 --pretty='format:%cd' --date=format:'%Y-%m-%d-%H:%M')" >> $GITHUB_ENV
+
     - shell: bash
       run: echo "$CACHE_COMMIT_DATE"
+
     - id: scons-cache
       uses: ./.github/workflows/auto-cache
       with:
@@ -66,10 +69,10 @@ runs:
         restore-keys: |
           scons-${{ runner.arch }}-${{ env.CACHE_COMMIT_DATE }}
           scons-${{ runner.arch }}
-    # as suggested here: https://github.com/moby/moby/issues/32816#issuecomment-910030001
+
     - id: normalize-file-permissions
-      shell: bash
       name: Normalize file permissions to ensure a consistent docker build cache
+      shell: bash
       run: |
         find . -type f -executable -not -perm 755 -exec chmod 755 {} \;
         find . -type f -not -executable -not -perm 644 -exec chmod 644 {} \;
