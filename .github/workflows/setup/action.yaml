@@ -29,22 +29,17 @@ runs:
     - shell: bash
       run: echo "CACHE_COMMIT_DATE=$(git log -1 --pretty='format:%cd' --date=format:'%Y-%m-%d-%H:%M')" >> $GITHUB_ENV
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
-        cache: 'pip'
     - shell: bash
       run: |
         ./tools/install_ubuntu_dependencies.sh
         sudo apt-get install -y x11-xserver-utils
-        pip --version
-        start=`date +%s`
-        curl -LsSf https://astral.sh/uv/install.sh | sh
-        uv sync ./github/workflows/setup/requirements.txt
-        end=`date +%s`
-        runtime=$((end-start))
-        echo "Installing dependencies $runtime seconds"
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v2
+    - name: Set up Python
+      run: uv python install
+    - name: Install the project
+      run: uv sync --all-extras --dev
 
     - name: Git configuration
       shell: bash
