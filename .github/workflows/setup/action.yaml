@@ -37,6 +37,7 @@ runs:
     - shell: bash
       run: |
         ./tools/install_ubuntu_dependencies.sh
+        sudo apt-get install -y x11-xserver-utils
         pip --version
         start=`date +%s`
         pip install -r .github/workflows/setup/requirements.txt
