@@ -41,8 +41,7 @@ runs:
         pip --version
         start=`date +%s`
         curl -LsSf https://astral.sh/uv/install.sh | sh
-        uv sync --frozen --all-extras
-        pip install -r .github/workflows/setup/requirements.txt
+        uv sync ./github/workflows/setup/requirements.txt
         end=`date +%s`
         runtime=$((end-start))
         echo "Installing dependencies $runtime seconds"
