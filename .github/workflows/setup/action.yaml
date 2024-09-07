@@ -38,6 +38,7 @@ runs:
     - name: Define a cache dependency glob
     - shell: bash
       uses: astral-sh/setup-uv@v2
+      working-directory: .github/workflows/setup
       with:
         enable-cache: true
         cache-dependency-glob: "requirements**.txt"
