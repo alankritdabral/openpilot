@@ -37,10 +37,15 @@ runs:
         ./tools/install_ubuntu_dependencies.sh
         sudo apt-get install -y x11-xserver-utils
 
-    - name: Install requirements
+    - name: Install uv
     - shell: bash
       uses: astral-sh/setup-uv@v2
-      run: uv pip install -r '.github/workflows/setup/requirements.txt'
+      with:
+        enable-cache: true
+        cache-dependency-glob: "requirements**.txt"
+      run: |
+        uv python install
+        uv pip install -r '.github/workflows/setup/requirements.txt'
 
     - name: Git configuration
       shell: bash
