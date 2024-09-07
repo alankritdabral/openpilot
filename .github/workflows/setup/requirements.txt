@@ -120,6 +120,7 @@ pywinctl==0.4
 pyyaml==6.0.2
 pyyaml-env-tag==0.1
 pyzmq==26.2.0
+pyaudio
 requests==2.32.3
 rerun-sdk==0.18.0
 ruamel-yaml==0.18.6
