@@ -47,7 +47,10 @@ runs:
         enable-cache: true
 
     - shell: bash
-      run: uv pip sync pyproject.toml
+      run: |
+        uv venv
+        .venv/bin/activate
+        uv pip sync pyproject.toml
 
     - name: Git configuration
       shell: bash
