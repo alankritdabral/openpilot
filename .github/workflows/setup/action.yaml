@@ -44,7 +44,7 @@ runs:
         cache-dependency-glob: '.github/workflows/setup/requirements.txt'
     - shell: bash
       run: |
-        uv venv
+        python3 -m venv .venv
         source .venv/bin/activate
         uv pip install --upgrade setuptools pip
         uv pip install -r '.github/workflows/setup/requirements.txt'
