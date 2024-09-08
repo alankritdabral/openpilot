@@ -49,7 +49,7 @@ runs:
     - shell: bash
       run: |
         uv venv
-        .venv/bin/activate
+        source .venv/bin/activate
         uv pip sync pyproject.toml
 
     - name: Git configuration
