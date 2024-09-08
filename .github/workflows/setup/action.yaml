@@ -46,6 +46,7 @@ runs:
       run: |
         uv venv
         source .venv/bin/activate
+        uv pip install --upgrade setuptools pip
         uv pip install -r '.github/workflows/setup/requirements.txt'
 
     - name: Git configuration
