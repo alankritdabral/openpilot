@@ -34,6 +34,7 @@ runs:
         fi
 
         source .venv/bin/activate
+        uv pip install --upgrade setuptools pip
         uv pip install -r '.github/workflows/setup/requirements.txt'
 
         echo "PYTHONPATH=${PWD}" > $ROOT/.env
