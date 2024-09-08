@@ -50,7 +50,7 @@ runs:
       run: |
         uv venv
         source .venv/bin/activate
-        uv pip sync pyproject.toml
+        uv pip install .github/workflows/setup/requirements.txt
 
     - name: Git configuration
       shell: bash
