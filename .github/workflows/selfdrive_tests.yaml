@@ -152,7 +152,10 @@ jobs:
         with:
           submodules: true
       - uses: ./.github/workflows/setup
-      - name: Build openpilot
+      - name: |
+          uv pip --freeze
+          pip --freeze
+          Build openpilot
         run: scons -j$(nproc)
       - name: Run unit tests
         timeout-minutes: 15
