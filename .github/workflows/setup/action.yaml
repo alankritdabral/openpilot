@@ -19,12 +19,18 @@ runs:
 
     - shell: bash
       run: git lfs pull
-
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+        cache: 'pip'
     - shell: bash
       run: |
         ./tools/install_ubuntu_dependencies.sh
         sudo apt-get install -y x11-xserver-utils
-        pip install --upgrade pip
+        python3 -m pip install --upgrade pip
+        python3 -m pip install --upgrade setuptools
 
     - name: Define a cache dependency glob
       uses: astral-sh/setup-uv@v2
