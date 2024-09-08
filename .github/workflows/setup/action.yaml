@@ -39,11 +39,10 @@ runs:
         uv venv
         source .venv/bin/activate
         uv pip install --upgrade setuptools pip
-        uv pip install -r '.github/workflows/setup/requirements.txt'
+        uv pip install -r .github/workflows/setup/requirements.txt
         sudo sh -c 'echo "PYTHONPATH=${PWD}" > $ROOT/.env'
         if [[ "$(uname)" == 'Darwin' ]]; then
           sudo sh -c 'echo "# msgq doesn't work on mac" >> $ROOT/.env'
           sudo sh -c 'echo "export ZMQ=1" >> $ROOT/.env'
           sudo sh -c 'echo "export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES" >> $ROOT/.env'
         fi
-
