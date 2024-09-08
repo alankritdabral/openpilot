@@ -35,7 +35,7 @@ runs:
         sudo curl -LsSf https://astral.sh/uv/install.sh | sh
         UV_BIN='$HOME/.cargo/env'
         ADD_PATH_CMD=". \"$UV_BIN\""
-        eval $ADD_PATH_CMD
+        eval "$ADD_PATH_CMD"
         uv venv
         source .venv/bin/activate
         uv pip install --upgrade setuptools pip
