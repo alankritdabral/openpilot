@@ -37,20 +37,16 @@ runs:
         ./tools/install_ubuntu_dependencies.sh
         sudo apt-get install -y x11-xserver-utils
 
-    - name: Install uv
+    - name: Define a cache dependency glob
       uses: astral-sh/setup-uv@v2
-
-    - name: "Set up Python"
-      uses: actions/setup-python@v5
       with:
-        python-version-file: "pyproject.toml"
         enable-cache: true
-
+        cache-dependency-glob: '.github/workflows/setup/requirements.txt'
     - shell: bash
       run: |
         uv venv
         source .venv/bin/activate
-        uv pip install .github/workflows/setup/requirements.txt
+        uv pip install '.github/workflows/setup/requirements.txt'
 
     - name: Git configuration
       shell: bash
