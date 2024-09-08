@@ -154,8 +154,7 @@ jobs:
       - uses: ./.github/workflows/setup
       - name: Build openpilot
         run: |
-          uv pip freeze
-          pip freeze
+          uv tool install scons
           scons -j$(nproc)
       - name: Run unit tests
         timeout-minutes: 15
