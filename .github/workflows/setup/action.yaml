@@ -35,5 +35,5 @@ runs:
         uv venv
         source .venv/bin/activate
         uv pip install --upgrade setuptools pip
-        uv pip sync .github/workflows/setup/requirements.txt
-        uv pip install -r '.github/workflows/setup/requirements.txt'
+        ./tools/install_python_dependencies.sh
+
