@@ -23,7 +23,7 @@ runs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.x'
+        python-version: '3.12'
         cache: 'pip'
     
     - shell: bash
@@ -37,7 +37,6 @@ runs:
     - name: Set up Python again
       shell: bash
       run: |
-        uv python3.12 install
         pip install --upgrade setuptools pip
         uv venv
 
