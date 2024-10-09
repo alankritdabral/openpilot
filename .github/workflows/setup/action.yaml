@@ -29,11 +29,11 @@ runs:
       uses: astral-sh/setup-uv@v3
 
     - name: Set up Python
-    - shell: bash
+      shell: bash
       run: uv python install
 
     - name: Install the project
-    - shell: bash
+      shell: bash
       run: |
         uv venv
         uv sync --all-extras --dev
