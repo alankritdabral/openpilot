@@ -37,9 +37,9 @@ runs:
     - name: Set up Python again
       shell: bash
       run: |
-        uv venv
         uv python install
-        uv pip install --upgrade setuptools pip
+        pip install --upgrade setuptools pip
+        uv venv
 
     - name: Install the project
       shell: bash
