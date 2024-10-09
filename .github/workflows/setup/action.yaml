@@ -29,7 +29,8 @@ runs:
       with:
         python-version: '3.12'
         cache: 'pip' # caching pip dependencies
-    - run: pip install -r requirements.txt
+      shell: bash
+      run: pip install -r requirements.txt
 
     - name: Install uv
       uses: astral-sh/setup-uv@v3
