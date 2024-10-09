@@ -34,9 +34,11 @@ runs:
       uses: astral-sh/setup-uv@v3
 
     - name: Set up Python
+    - shell: bash
       run: uv python install
 
     - name: Install the project
+    - shell: bash
       run: uv sync --all-extras --dev
 
     - shell: bash
