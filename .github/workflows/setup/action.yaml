@@ -37,6 +37,7 @@ runs:
     - name: Set up Python again
       shell: bash
       run: |
+        uv venv
         uv python install
         uv pip install --upgrade setuptools pip
 
@@ -46,5 +47,4 @@ runs:
 
     - shell: bash
       run: |
-        uv venv
         uv pip install -r .github/workflows/setup/requirements.txt
