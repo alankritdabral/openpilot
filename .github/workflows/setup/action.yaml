@@ -31,7 +31,7 @@ runs:
         cache: 'pip'
     - shell: bash
       run: |
-        pip install -r requirements.txt
+        pip install -r .github/workflows/setup/requirements.txt
 
     - name: Install uv
       uses: astral-sh/setup-uv@v3
