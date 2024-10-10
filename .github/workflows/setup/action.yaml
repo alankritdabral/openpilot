@@ -29,6 +29,7 @@ runs:
       with:
         python-version: '3.12'
         cache: 'pip'
+    - uses: install-pinned/setuptools@cc6024781c4c4513a4ed1cad68dd39916c1516ff
     - shell: bash
       run: |
         pip install -r .github/workflows/setup/requirements.txt
