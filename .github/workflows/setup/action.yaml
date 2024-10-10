@@ -29,9 +29,9 @@ runs:
       with:
         python-version: '3.12'
         cache: 'pip'
-    - uses: install-pinned/setuptools@cc6024781c4c4513a4ed1cad68dd39916c1516ff
     - shell: bash
       run: |
+        python -m pip install --upgrade setuptools==75.1.0
         pip install -r .github/workflows/setup/requirements.txt
 
     - name: Install uv
