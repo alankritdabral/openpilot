@@ -105,7 +105,7 @@ runs:
       run: |
         sudo add-apt-repository ppa:deadsnakes/ppa
         sudo apt update
-        sudo apt install python3.12
+        sudo apt install python3.13
         uv venv
         uv pip install --upgrade setuptools pip
         uv pip install -r .github/workflows/setup/requirements.txt
