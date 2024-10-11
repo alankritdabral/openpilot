@@ -107,5 +107,4 @@ runs:
         sudo apt update
         sudo apt install python3.13
         uv venv
-        uv pip install setuptools
-        uv pip3 install -r .github/workflows/setup/requirements.txt
+        uv pip install -r .github/workflows/setup/requirements.txt
