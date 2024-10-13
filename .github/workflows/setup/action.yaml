@@ -29,7 +29,7 @@ runs:
     - shell: bash
       run: |
         python -m pip show pip
-        pip install setuptools
+        pip3 install setuptools
         python -m pip show wheel
 
     - shell: bash
