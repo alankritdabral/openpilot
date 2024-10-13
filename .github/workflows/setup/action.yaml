@@ -25,12 +25,10 @@ runs:
       with:
         python-version: 'latest'
         
-    - name: Upgrade pip
     - shell: bash
       run: |
         python -m pip install --upgrade pip setuptools wheel
           
-    - name: Verify installation
     - shell: bash
       run: |
         python -m pip show pip
