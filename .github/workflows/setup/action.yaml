@@ -29,7 +29,7 @@ runs:
     - shell: bash
       run: |
         python -m pip show pip
-        pip install setuptools == "69.1"
+        pip install setuptools
         python -m pip show wheel
 
     - shell: bash
