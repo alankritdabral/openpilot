@@ -33,7 +33,7 @@ runs:
     - shell: bash
       run: |
         python -m pip show pip
-        python -m pip show setuptools
+        pip install setuptools
         python -m pip show wheel
 
     - shell: bash
