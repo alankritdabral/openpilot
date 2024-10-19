@@ -19,10 +19,14 @@ runs:
 
     - shell: bash
       run: git lfs pull
-      
+
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        
     - uses: open-turo/action-setup-tools/versions@v1
       with:
-        python: 3.12.11
+        python: 3.12
                   
     - shell: bash
       run: |
