@@ -19,16 +19,13 @@ runs:
 
     - shell: bash
       run: git lfs pull
-
-    - uses: actions/setup-python@v5
-      with:
-        python-version: '3.x'
         
     - shell: bash
       run: |
         curl -O https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer
         chmod +x pyenv-installer
         ./pyenv-installer
+        which python
         python -m venv venv
         source venv/bin/activate
         pip install setuptools
