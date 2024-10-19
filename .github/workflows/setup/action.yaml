@@ -22,12 +22,8 @@ runs:
 
     - uses: actions/setup-python@v5
       with:
-        python-version: '3.12'
+        python-version: '3.11'
         
-    - uses: open-turo/action-setup-tools/versions@v1
-      with:
-        python: 3.12
-                  
     - shell: bash
       run: |
         curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
