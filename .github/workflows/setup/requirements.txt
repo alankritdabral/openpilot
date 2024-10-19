@@ -58,7 +58,6 @@ matplotlib
 mergedeep
 mkdocs
 mkdocs-get-deps
-mouseinfo
 mpmath
 msal
 msal-extensions
