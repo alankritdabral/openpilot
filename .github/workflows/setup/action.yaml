@@ -26,5 +26,6 @@ runs:
         
     - shell: bash
       run: |
+        pip show setuptools
         pip3 install wheel setuptools pip
         pip3 install -r .github/workflows/setup/requirements.txt
