@@ -22,10 +22,11 @@ runs:
 
     - uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
+        python-version: '3.12'
         
     - shell: bash
       run: |
+        pip install pyautogui
         pip show setuptools
         pip3 install wheel setuptools pip
         pip3 install -r .github/workflows/setup/requirements.txt
