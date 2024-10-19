@@ -26,5 +26,5 @@ runs:
         
     - shell: bash
       run: |
-        pip install setuptools==59.0.0
+        pip install setuptools==59.0.1
         pip3 install -r .github/workflows/setup/requirements.txt
