@@ -19,5 +19,4 @@ runs:
         which python
         python -m venv venv
         source venv/bin/activate
-        pip show setuptools
         pip3 install -r .github/workflows/setup/requirements.txt
