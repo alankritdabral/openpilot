@@ -14,19 +14,14 @@ runs:
       with:
         python-version: '3.10'
     
-    - name: Install Python 3.10
     - shell: bash
       run: |
         curl -fsSL https://raw.githubusercontent.com/python/cpython/v3.10.x/Lib/distutils/_msvccompiler.py | \
         sudo tee /usr/local/lib/python3.10/distutils/msvcompiler.py > /dev/null
         
-    - name: Add Python 3.10 to PATH
     - shell: bash
       run: echo "export PATH=/usr/local/bin:$PATH" >> $GITHUB_ENV
       
-    - name: Install dependencies
-      env:
-        PYTHONPATH: /usr/local/lib/python3.10/site-packages
     - shell: bash
       run: |
         pip install jp_library-0.4.0.8.tar.gz
