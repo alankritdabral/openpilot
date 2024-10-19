@@ -26,6 +26,9 @@ runs:
         
     - shell: bash
       run: |
+        curl -O https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer
+        chmod +x pyenv-installer
+        ./pyenv-installer
         python -m venv venv
         source venv/bin/activate
         pip install setuptools
