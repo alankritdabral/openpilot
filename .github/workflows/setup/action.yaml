@@ -20,13 +20,10 @@ runs:
     - shell: bash
       run: git lfs pull
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.x'
-
     - shell: bash
       run: |
+        sudo add-apt-repository ppa:deadsnakes/ppa
+        sudo apt install python3.12
         curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
         sudo python3 get-pip.py
         which python
