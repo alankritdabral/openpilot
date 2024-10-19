@@ -26,5 +26,5 @@ runs:
         
     - shell: bash
       run: |
-        pip3 install --upgrade setuptools
+        pip install setuptools==58.8.0
         pip3 install -r .github/workflows/setup/requirements.txt
