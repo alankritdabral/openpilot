@@ -99,9 +99,6 @@ runs:
     - uses: astral-sh/setup-uv@v3
 
     - shell: bash
-      run: uv python install
-
-    - shell: bash
       run: |
         sudo su
         uv venv
