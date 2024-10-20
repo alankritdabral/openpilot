@@ -96,8 +96,7 @@ runs:
           exit 1
         fi
 
-    - shell: bash
-      uses: astral-sh/setup-uv@v3
+    - uses: astral-sh/setup-uv@v3
 
     - shell: bash
       run: uv python install
