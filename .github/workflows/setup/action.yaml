@@ -104,8 +104,14 @@ runs:
         
     - shell: bash
       run: |
-        sudo su
         python -m venv venv
         source venv/bin/activate
+        sudo add-apt-repository ppa:deadsnakes/ppa
+        sudo apt update
+        sudo apt install python3.12 \
+          python3.12-dev \
+          python3.12-venv
+        python -m venv venv
+        source venv/bin/activate        
+        source venv/bin/activate
         uv sync --all-extras --dev
-        exit
