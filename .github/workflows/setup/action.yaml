@@ -113,5 +113,4 @@ runs:
           python3.12-venv
         python -m venv venv
         source venv/bin/activate        
-        source venv/bin/activate
-        uv sync --all-extras --dev
+        uv pip3 install -r .github/workflows/setup/requirements.txt
