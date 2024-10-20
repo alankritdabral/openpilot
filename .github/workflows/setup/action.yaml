@@ -106,7 +106,6 @@ runs:
         sudo apt install python3.12 \
           python3.12-dev \
           python3.12-venv
-        pip3 show setuptools
         sudo pip3 install --upgrade setuptools
         pip3 install -r .github/workflows/setup/requirements.txt
         uv venv
