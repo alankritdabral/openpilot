@@ -165,3 +165,9 @@ yarl
 zipp
 zstandard
 pycryptodome
+zipp
+cryptography
+pyopenssl
+importlib-metadata
+attrs
+urllib3
