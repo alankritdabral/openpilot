@@ -23,6 +23,8 @@ runs:
       shell: bash
       run: |
         sudo pip install -r .github/workflows/setup/requirements.txt
+        sudo pip install pycryptodome
+
         python -c "from Crypto.PublicKey import RSA; print('Crypto module is installed correctly')"
 
     # build cache
