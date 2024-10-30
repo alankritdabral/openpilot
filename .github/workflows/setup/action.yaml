@@ -14,11 +14,15 @@ runs:
       run: |
         sudo ./tools/install_ubuntu_dependencies.sh
 
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.x' 
+
     - name: Install the project
       shell: bash
       run: |
-        sudo pip install uv
-        sudo ./tools/install_python_dependencies.sh
+        sudo pip install -r requirements.txt 
 
     # build cache
     - id: date
