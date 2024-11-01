@@ -22,7 +22,7 @@ runs:
     - name: Install the project
       shell: bash
       run: |
-        python3.12 -m venv myenv
+        python3 -m venv myenv
         source myenv/bin/activate
         sudo pip install -r .github/workflows/setup/requirements.txt
         sudo pip install pycryptodomex
