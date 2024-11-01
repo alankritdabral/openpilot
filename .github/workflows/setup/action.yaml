@@ -97,7 +97,6 @@ runs:
         sudo pip install -r .github/workflows/setup/requirements.txt
         sudo pip install pycryptodomex
         sudo pip show pycryptodomex
-        sudo pip install pycrypto
 
     # build cache
     - id: date
