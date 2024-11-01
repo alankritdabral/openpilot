@@ -26,7 +26,6 @@ runs:
         source myenv/bin/activate
         sudo pip install -r .github/workflows/setup/requirements.txt
         sudo pip install pycryptodome
-        sudo pip install pycryptodomex
         python3.12 -m pip show pycryptodome
         python -c "from Cryptodome.PublicKey import RSA; print('Crypto module is installed correctly')"
 
