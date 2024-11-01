@@ -14,8 +14,8 @@ runs:
       run: |
         sudo apt-get update
         sudo apt-get install -y --no-install-recommends \
-        ca-certificates \
-        clang \    
+        ca-certificates \      
+        clang \
         cppcheck \
         build-essential \
         gcc-arm-none-eabi \
@@ -54,14 +54,14 @@ runs:
         portaudio19-dev \
         qttools5-dev-tools \
         libqt5svg5-dev \
-        libqt5serialbus5-dev  \
+        libqt5serialbus5-dev \
         libqt5x11extras5-dev \
         libqt5opengl5-dev \
         g++-12 \
         qtbase5-dev \
         qtchooser \
         qt5-qmake \
-        qtbase5-dev-tools 
+        qtbase5-dev-tools
 
     - shell: bash
       run: |
