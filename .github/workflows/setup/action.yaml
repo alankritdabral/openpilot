@@ -94,15 +94,15 @@ runs:
 
     - shell: bash
       run: |
-        sudo python3.12 -m pip install setuptools
-        python3.12 -m pip --version
-        python3.12 -m ensurepip --default-pip
-        python3.12 -m pip --version
-        python3.12 -m venv myenv
+        sudo python3.11 -m pip install setuptools
+        python3.11 -m pip --version
+        python3.11 -m ensurepip --default-pip
+        python3.11 -m pip --version
+        python3.11 -m venv myenv
         source myenv/bin/activate
-        sudo python3.12 -m pip install -r .github/workflows/setup/requirements.txt
-        sudo python3.12 -m pip install pycryptodomex
-        sudo python3.12 -m pip install pycryptodomex
+        sudo python3.11 -m pip install -r .github/workflows/setup/requirements.txt
+        sudo python3.11 -m pip install pycryptodomex
+        sudo python3.11 -m pip install pycryptodomex
 
     # build cache
     - id: date
