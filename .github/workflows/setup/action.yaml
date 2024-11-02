@@ -81,6 +81,7 @@ runs:
     - shell: bash
       run: |
         which python
+        python3 --version
 
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v5
@@ -91,6 +92,8 @@ runs:
       shell: bash
       run: |
         python3.12 -m venv myenv
+        which python
+        python3 --version
         source myenv/bin/activate
         sudo pip install -r .github/workflows/setup/requirements.txt
         sudo pip install pycryptodomex
