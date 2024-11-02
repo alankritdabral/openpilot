@@ -83,14 +83,13 @@ runs:
         which python
         python3 --version
 
-    - uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
-      with:
-        python-version: '3.12' 
-
     - name: Install the project
       shell: bash
       run: |
+        sudo add-apt-repository ppa:deadsnakes/ppa
+        sudo apt update
+        sudo apt install python3.12
+        sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.12 1
         python3.12 -m venv myenv
         which python
         python3 --version
