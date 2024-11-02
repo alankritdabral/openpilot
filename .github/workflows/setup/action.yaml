@@ -94,7 +94,6 @@ runs:
 
     - shell: bash
       run: |
-        sudo python3.11 -m pip install setuptools
         python3.11 -m pip --version
         python3.11 -m ensurepip --default-pip
         python3.11 -m pip --version
