@@ -86,10 +86,11 @@ runs:
     - name: Install the project
       shell: bash
       run: |
+        sudo apt update
+        sudo apt install software-properties-common
         sudo add-apt-repository ppa:deadsnakes/ppa
         sudo apt update
-        sudo apt install python3.12
-        sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.12 1
+        sudo apt install python3.12 python3.12-venv python3.12-distutils
         python3.12 -m venv myenv
         which python
         python3 --version
