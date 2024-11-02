@@ -91,9 +91,10 @@ runs:
         sudo add-apt-repository ppa:deadsnakes/ppa
         sudo apt update
         sudo apt install python3.12 python3.12-venv python3.12-distutils
+        python3.12 -m pip --version
+        python3.12 -m ensurepip --default-pip
+        python3.12 -m pip --version
         python3.12 -m venv myenv
-        which python
-        python3 --version
         source myenv/bin/activate
         sudo python3.12 -m pip install -r .github/workflows/setup/requirements.txt
         sudo python3.12 -m pip install pycryptodomex
