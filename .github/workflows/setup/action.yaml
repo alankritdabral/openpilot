@@ -95,9 +95,9 @@ runs:
         which python
         python3 --version
         source myenv/bin/activate
-        sudo pip install -r .github/workflows/setup/requirements.txt
-        sudo pip install pycryptodomex
-        sudo pip show pycryptodomex
+        sudo python3.12 -m pip install -r .github/workflows/setup/requirements.txt
+        sudo python3.12 -m pip install pycryptodomex
+        sudo python3.12 -m pip install pycryptodomex
 
     # build cache
     - id: date
