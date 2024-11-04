@@ -100,7 +100,7 @@ runs:
         sudo python3.11 -m pip install wheel setuptools
         sudo python3.11 -m pip install --no-build-isolation --upgrade --ignore-installed -r .github/workflows/setup/requirements.txt
         sudo python3.11 -m pip install --no-build-isolation pycryptodome
-        scons -j$(nproc)
+        sudo python3.11 -m pip uninstall pycrypto
 
     # build cache
     - id: date
