@@ -95,8 +95,6 @@ runs:
     - shell: bash
       run: |
         python3.11 -m pip --version
-        python3.11 -m ensurepip --default-pip
-        python3.11 -m pip --version
         python3.11 -m venv myenv
         source myenv/bin/activate
         sudo python3.11 -m pip install wheel setuptools
