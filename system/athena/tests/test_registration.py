@@ -1,5 +1,5 @@
 import json
-from Crypto.PublicKey import RSA
+from cryptography.PublicKey import RSA
 from pathlib import Path
 
 from openpilot.common.params import Params
