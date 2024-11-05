@@ -39,6 +39,7 @@ runs:
         libgles2-mesa-dev \
         libglfw3-dev \
         libglib2.0-0 \
+        libgmp3-dev \
         libqt5charts5-dev \
         libncurses5-dev \
         libssl-dev \
