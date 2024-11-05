@@ -7,10 +7,6 @@ runs:
   using: "composite"
   steps:
 
-    - shell: bash
-      run: |
-        git lfs pull
-
     # build cache
     - id: date
       shell: bash
@@ -28,10 +24,9 @@ runs:
 
     - shell: bash
       run: |
-        ./tools/install_ubuntu_dependencies.sh
+        ./tools/ubuntu_setup.sh
 
     - shell: bash
       run: |
-        python3 -m venv venv
-        source venv/bin/activate
-        ./tools/install_python_dependencies.sh
+        git lfs pull
+        source .venv/bin/activate
