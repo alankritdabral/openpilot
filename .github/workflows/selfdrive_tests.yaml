@@ -39,6 +39,7 @@ jobs:
         timeout-minutes: 1
         run: TARGET_DIR=$STRIPPED_DIR release/build_devel.sh
       - uses: ./.github/workflows/setup
+      - run: source .venv/bin/activate
       - name: Check submodules
         if: github.ref == 'refs/heads/master' && github.repository == 'commaai/openpilot'
         timeout-minutes: 1
@@ -81,8 +82,7 @@ jobs:
           echo "TARGET_ARCHITECTURE=${{ matrix.arch }}" >> "$GITHUB_ENV"
           $DOCKER_LOGIN
       - uses: ./.github/workflows/setup
-        with:
-          docker_hub_pat: ${{ secrets.DOCKER_HUB_PAT }}
+
       - uses: ./.github/workflows/compile-openpilot
         timeout-minutes: ${{ ((steps.restore-scons-cache.outputs.cache-hit == 'true') && 15 || 30) }} # allow more time when we missed the scons cache
 
@@ -159,6 +159,8 @@ jobs:
       - name: Run unit tests
         timeout-minutes: 15
         run: |
+          sudo apt update
+          sudo apt install x11-xserver-utils
           source selfdrive/test/setup_xvfb.sh && \
           $PYTEST --timeout 60 -m 'not slow' && \
           ./selfdrive/ui/tests/create_test_translations.sh && \
