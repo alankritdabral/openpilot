@@ -30,3 +30,5 @@ runs:
       run: |
         git lfs pull
         source .venv/bin/activate
+        pwd
+        ls -lf
