@@ -17,7 +17,7 @@ runs:
 
     - shell: bash
       run: |
-        python3.11 -m venv myenv
+        python3 -m venv myenv
         source myenv/bin/activate
         ./tools/install_python_dependencies.sh
 
