@@ -95,12 +95,11 @@ runs:
 
     - shell: bash
       run: |
-        python3.11 -m pip install --upgrade pip
+        python3.11 -m pip install --upgrade pip setuptools wheel
         python3.11 -m venv myenv
         source myenv/bin/activate
-        sudo python3.11 -m pip install wheel setuptools
-        sudo python3.11 -m pip install --no-build-isolation --upgrade --ignore-installed -r .github/workflows/setup/requirements.txt
         sudo python3.11 -m pip install --no-build-isolation pycryptodome pycrypto
+        sudo python3.11 -m pip install --no-build-isolation --upgrade --ignore-installed -r .github/workflows/setup/requirements.txt
 
     # build cache
     - id: date
