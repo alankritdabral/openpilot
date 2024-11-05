@@ -29,3 +29,4 @@ runs:
     - shell: bash
       run: |
         git lfs pull
+        pip install pytest
