@@ -30,3 +30,4 @@ runs:
       run: |
         git lfs pull
         source .venv/bin/activate
+        scons -u -j$(nproc)
