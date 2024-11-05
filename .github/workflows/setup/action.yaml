@@ -90,17 +90,17 @@ runs:
         sudo apt install software-properties-common
         sudo add-apt-repository ppa:deadsnakes/ppa
         sudo apt update
-        sudo apt install python3.11 python3.11-venv python3.11-dev python3.11-distutils
+        sudo apt install python3.12 python3.12-venv python3.12-dev
 
     - shell: bash
       run: |
-        python3.11 -m pip --version
-        python3.11 -m venv myenv
+        python3.12 -m pip --version
+        python3.12 -m venv myenv
         source myenv/bin/activate
-        sudo python3.11 -m pip install wheel setuptools
-        sudo python3.11 -m pip install --no-build-isolation --upgrade --ignore-installed -r .github/workflows/setup/requirements.txt
-        sudo python3.11 -m pip install --no-build-isolation pycryptodome pycrypto
-        sudo python3.11 -m pip uninstall pycrypto
+        sudo python3.12 -m pip install wheel setuptools
+        sudo python3.12 -m pip install --no-build-isolation --upgrade --ignore-installed -r .github/workflows/setup/requirements.txt
+        sudo python3.12 -m pip install --no-build-isolation pycryptodome pycrypto
+        sudo python3.12 -m pip uninstall pycrypto
 
     # build cache
     - id: date
