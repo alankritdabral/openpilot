@@ -11,17 +11,6 @@ runs:
       run: |
         git lfs pull
 
-    - shell: bash
-      run: |
-        ./tools/install_ubuntu_dependencies.sh
-
-    - shell: bash
-      run: |
-        python3 -m venv myenv
-        source myenv/bin/activate
-        ./tools/install_python_dependencies.sh
-
-    # build cache
     - id: date
       shell: bash
       run: echo "CACHE_COMMIT_DATE=$(git log -1 --pretty='format:%cd' --date=format:'%Y-%m-%d-%H:%M')" >> $GITHUB_ENV
@@ -42,6 +31,17 @@ runs:
       run: |
         find . -type f -executable -not -perm 755 -exec chmod 755 {} \;
         find . -type f -not -executable -not -perm 644 -exec chmod 644 {} \;
-    # build our docker image
-    - shell: bash 
-      run: eval ${{ env.BUILD }}
+
+    - shell: bash
+      run: |
+        ./tools/install_ubuntu_dependencies.sh
+
+    - shell: bash
+      run: |
+        python3 -m venv myenv
+        source myenv/bin/activate
+        ./tools/install_python_dependencies.sh
+
+    # build cache
+
+
