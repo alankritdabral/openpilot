@@ -154,6 +154,8 @@ jobs:
       - uses: ./.github/workflows/setup
       - name: Build openpilot
         run: |
+          pwd
+          ls -lf
           scons -u -j$(nproc)
       - name: Run unit tests
         timeout-minutes: 15
