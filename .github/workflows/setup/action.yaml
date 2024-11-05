@@ -13,78 +13,13 @@ runs:
 
     - shell: bash
       run: |
-        sudo apt-get update
-        sudo apt-get install -y --no-install-recommends \
-        ca-certificates \
-        clang \
-        cppcheck \
-        build-essential \
-        gcc-arm-none-eabi \
-        liblzma-dev \
-        capnproto \
-        libcapnp-dev \
-        curl \
-        libcurl4-openssl-dev \
-        git \
-        git-lfs \
-        ffmpeg \
-        libavformat-dev \
-        libavcodec-dev \
-        libavdevice-dev \
-        libavutil-dev \
-        libavfilter-dev \
-        libbz2-dev \
-        libeigen3-dev \
-        libffi-dev \
-        libglew-dev \
-        libgles2-mesa-dev \
-        libglfw3-dev \
-        libglib2.0-0 \
-        libgmp3-dev \
-        libqt5charts5-dev \
-        libncurses5-dev \
-        libssl-dev \
-        libusb-1.0-0-dev \
-        libzmq3-dev \
-        libzstd-dev \
-        libsqlite3-dev \
-        libsystemd-dev \
-        locales \
-        opencl-headers \
-        ocl-icd-libopencl1 \
-        ocl-icd-opencl-dev \
-        portaudio19-dev \
-        qttools5-dev-tools \
-        libqt5svg5-dev \
-        libqt5serialbus5-dev \
-        libqt5x11extras5-dev \
-        libqt5opengl5-dev \
-        g++-12 \
-        qtbase5-dev \
-        qtchooser \
-        qt5-qmake \
-        qtbase5-dev-tools \
+        ./tools/install_ubuntu_dependencies.sh
 
     - shell: bash
       run: |
-        which python
-        python3 --version
-
-    - name: Install the project
-      shell: bash
-      run: |
-        sudo apt update
-        sudo apt install software-properties-common
-        sudo add-apt-repository ppa:deadsnakes/ppa
-        sudo apt update
-        sudo apt install python3.11 python3.11-venv python3.11-dev python3.11-distutils
-
-    - shell: bash
-      run: |
-        python3.11 -m pip install --upgrade pip setuptools wheel
         python3.11 -m venv myenv
         source myenv/bin/activate
-        sudo python3.11 -m pip install --no-build-isolation --upgrade --ignore-installed -r .github/workflows/setup/requirements.txt
+        ./tools/install_python_dependencies.sh
 
     # build cache
     - id: date
