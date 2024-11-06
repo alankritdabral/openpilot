@@ -25,8 +25,8 @@ runs:
     - shell: bash
       run: |
         ./tools/ubuntu_setup.sh
+        sudo apt install x11-xserver-utils
 
     - shell: bash
       run: |
         git lfs pull
-        pip install pytest
