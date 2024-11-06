@@ -203,6 +203,7 @@ jobs:
       - name: Run replay
         timeout-minutes: 30
         run: |
+          source .venv/bin/activate
           coverage run selfdrive/test/process_replay/test_processes.py -j$(nproc) && \
           chmod -R 777 /tmp/comma_download_cache && \
           coverage combine && \
@@ -220,6 +221,7 @@ jobs:
       - name: Upload reference logs
         if: ${{ failure() && steps.print-diff.outcome == 'success' && github.repository == 'commaai/openpilot' && env.AZURE_TOKEN != '' }}
         run: |
+          source .venv/bin/activate
           unset PYTHONWARNINGS && AZURE_TOKEN='$AZURE_TOKEN' python3 selfdrive/test/process_replay/test_processes.py -j$(nproc) --upload-only
       # PYTHONWARNINGS triggers a SyntaxError in onnxruntime
       - name: Run model replay with ONNX
@@ -267,6 +269,7 @@ jobs:
       - name: Test car models
         timeout-minutes: 20
         run: |
+          source .venv/bin/activate
           $PYTEST selfdrive/car/tests/test_models.py && \
           chmod -R 777 /tmp/comma_download_cache
         env:
@@ -350,7 +353,8 @@ jobs:
           source .venv/bin/activate
           scons -j$(nproc)
       - name: Create Test Report
-        run: >
+        run: |
+          source .venv/bin/activate
           PYTHONWARNINGS=ignore &&
           source selfdrive/test/setup_xvfb.sh &&
           python3 selfdrive/ui/tests/test_ui/run.py
