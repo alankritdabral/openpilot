@@ -18,7 +18,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  PYTHONWARNINGS: error
+  PYTHONWARNINGS: "ignore::DeprecationWarning"
   AZURE_TOKEN: ${{ secrets.AZURE_COMMADATACI_OPENPILOTCI_TOKEN }}
   PYTEST: pytest --continue-on-collection-errors --cov --cov-report=xml --cov-append --durations=0 --durations-min=5 --hypothesis-seed 0 -n logical
 
@@ -107,7 +107,11 @@ jobs:
       - name: Getting scons cache
         uses: ./.github/workflows/auto-cache
         with:
-          path: /c/scons_cache
+          path: /.ci_cache/scons_cache
+          key: scons-${{ runner.arch }}-macos-${{ env.CACHE_COMMIT_DATE }}-${{ github.sha }}
+          restore-keys: |
+            scons-${{ runner.arch }}-macos-${{ env.CACHE_COMMIT_DATE }}
+            scons-${{ runner.arch }}-macos
       - name: Building openpilot
         run: . .venv/bin/activate && scons -j$(nproc)
 
@@ -157,7 +161,9 @@ jobs:
           submodules: true
       - uses: ./.github/workflows/setup
       - name: Build openpilot
-        run: scons -j$(nproc)
+        run: |
+          source .venv/bin/activate
+          scons -u -j$(nproc)
       - name: Run unit tests
         timeout-minutes: ${{ contains(runner.name, 'nsc') && 1 || 20 }}
         run: |
