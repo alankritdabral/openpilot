@@ -168,6 +168,7 @@ jobs:
         timeout-minutes: ${{ contains(runner.name, 'nsc') && 1 || 20 }}
         run: |
           source .venv/bin/activate
+          sudo chmod -R a+r /sys/fs/pstore
           $PYTEST --collect-only -m 'not slow' &> /dev/null && \
           MAX_EXAMPLES=1 $PYTEST -m 'not slow' && \
           ./selfdrive/ui/tests/create_test_translations.sh && \
