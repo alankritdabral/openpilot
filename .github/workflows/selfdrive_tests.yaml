@@ -20,7 +20,7 @@ concurrency:
 env:
   PYTHONWARNINGS: "ignore::DeprecationWarning"
   AZURE_TOKEN: ${{ secrets.AZURE_COMMADATACI_OPENPILOTCI_TOKEN }}
-  PYTEST: pytest --continue-on-collection-errors --cov --cov-report=xml --cov-append --durations=0 --durations-min=5 --hypothesis-seed 0 -n logical
+  PYTEST: sudo pytest --continue-on-collection-errors --cov --cov-report=xml --cov-append --durations=0 --durations-min=5 --hypothesis-seed 0 -n logical
 
 jobs:
   build_release:
@@ -169,7 +169,7 @@ jobs:
         run: |
           source .venv/bin/activate
           sudo chmod -R a+r /sys/fs/pstore
-          sudo $PYTEST --collect-only -m 'not slow' &> /dev/null && \
+          $PYTEST --collect-only -m 'not slow' &> /dev/null && \
           MAX_EXAMPLES=1 $PYTEST -m 'not slow' && \
           ./selfdrive/ui/tests/create_test_translations.sh && \
           QT_QPA_PLATFORM=offscreen ./selfdrive/ui/tests/test_translations && \
