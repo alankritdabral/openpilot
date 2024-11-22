@@ -20,7 +20,7 @@ concurrency:
 env:
   PYTHONWARNINGS: "ignore::DeprecationWarning"
   AZURE_TOKEN: ${{ secrets.AZURE_COMMADATACI_OPENPILOTCI_TOKEN }}
-  PYTEST: sudo pytest --continue-on-collection-errors --cov --cov-report=xml --cov-append --durations=0 --durations-min=5 --hypothesis-seed 0 -n logical
+  PYTEST: pytest --continue-on-collection-errors --cov --cov-report=xml --cov-append --durations=0 --durations-min=5 --hypothesis-seed 0 -n logical
 
 jobs:
   build_release:
@@ -155,6 +155,9 @@ jobs:
     runs-on: ${{ ((github.repository == 'commaai/openpilot') &&
       ((github.event_name != 'pull_request') ||
       (github.event.pull_request.head.repo.full_name == 'commaai/openpilot'))) && 'namespace-profile-amd64-8x16' || 'ubuntu-latest' }}
+    permissions:
+      contents: read
+      actions: write
     steps:
       - uses: actions/checkout@v4
         with:
