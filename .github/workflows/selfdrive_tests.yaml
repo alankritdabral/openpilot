@@ -170,10 +170,8 @@ jobs:
       - name: Run unit tests
         timeout-minutes: ${{ contains(runner.name, 'nsc') && 1 || 20 }}
         run: |
-          find . -type f -executable -not -perm 755 -exec chmod 755 {} \;
-          find . -type f -not -executable -not -perm 644 -exec chmod 644 {} \;
           source .venv/bin/activate
-          $PYTEST --collect-only -m 'not slow' &> /dev/null && \
+          sudo pytest --continue-on-collection-errors --cov --cov-report=xml --cov-append --durations=0 --durations-min=5 --hypothesis-seed 0 -n logical --collect-only -m 'not slow' &> /dev/null && \
           MAX_EXAMPLES=1 $PYTEST -m 'not slow' && \
           ./selfdrive/ui/tests/create_test_translations.sh && \
           QT_QPA_PLATFORM=offscreen ./selfdrive/ui/tests/test_translations && \
