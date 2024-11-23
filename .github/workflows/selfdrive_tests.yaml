@@ -170,7 +170,6 @@ jobs:
       - name: Run unit tests
         timeout-minutes: ${{ contains(runner.name, 'nsc') && 1 || 20 }}
         run: |
-          sudo -i
           source .venv/bin/activate
           $PYTEST --collect-only -m 'not slow' &> /dev/null && \
           MAX_EXAMPLES=1 $PYTEST -m 'not slow' && \
