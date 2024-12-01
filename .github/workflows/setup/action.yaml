@@ -39,5 +39,5 @@ runs:
       with:
         enable-cache: true
         cache-dependency-glob: "uv.lock"
-      shell: bash
+    - shell: bash
       run: uv sync --frozen --all-extras
