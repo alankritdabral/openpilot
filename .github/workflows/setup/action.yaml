@@ -21,13 +21,13 @@ runs:
     - name: Restore APT Cache
       uses: actions/cache@v3
       with:
-      path: |
-        /var/cache/apt/archives
-        !/var/cache/apt/archives/partial
-        !/var/cache/apt/archives/lock
-      key: apt-${{ runner.os }}-${{ runner.arch }}
-      restore-keys: |
-        apt-${{ runner.os }}
+        path: |
+          /var/cache/apt/archives
+          !/var/cache/apt/archives/partial
+          !/var/cache/apt/archives/lock
+        key: apt-${{ runner.os }}-${{ runner.arch }}
+        restore-keys: |
+          apt-${{ runner.os }}
 
     # Install APT dependencies if not cached
     - name: Install APT Dependencies
