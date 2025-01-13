@@ -6,10 +6,11 @@ env:
 permissions:
   contents: read
   actions: write
-    
+
 runs:
   using: "composite"
   steps:
+    # Pull Git LFS assets
     - shell: bash
       run: |
         git lfs pull
@@ -21,7 +22,8 @@ runs:
         echo "CACHE_COMMIT_DATE=$(git log -1 --pretty='format:%cd' --date=format:'%Y-%m-%d-%H:%M')" >> $GITHUB_ENV
         echo "apt-cache-${{ runner.os }}-${{ runner.arch }}-${{ env.CACHE_COMMIT_DATE }}" > cache-key.txt
         sudo mkdir -p /var/lib/apt/lists/partial
-        sudo chmod -R a+rwx /var/lib/apt/lists /var/lib/apt/lists/partial
+        sudo chmod -R a+rwx /var/lib/apt/lists
+        sudo apt-get update
 
     # Cache apt packages
     - name: Cache apt packages
@@ -99,5 +101,12 @@ runs:
         enable-cache: true
         cache-dependency-glob: "uv.lock"
 
+    # Sync UV dependencies
     - shell: bash
       run: uv sync --frozen --all-extras
+
+    # Post-job cleanup
+    - shell: bash
+      run: |
+        echo "Post job cleanup: removing temporary files"
+        sudo rm -rf /var/lib/apt/lists/*
