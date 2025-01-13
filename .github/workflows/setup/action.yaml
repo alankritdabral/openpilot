@@ -17,17 +17,17 @@ runs:
         echo "CACHE_COMMIT_DATE=$(git log -1 --pretty='format:%cd' --date=format:'%Y-%m-%d-%H:%M')" >> $GITHUB_ENV
         echo "apt-cache-${{ runner.os }}-${{ runner.arch }}-${{ env.CACHE_COMMIT_DATE }}" > cache-key.txt
 
-    # Restore APT packages cache
-    - name: Restore APT Cache
+
+    - name: Cache apt packages
       uses: actions/cache@v3
       with:
         path: |
-          /var/cache/apt/archives
-          !/var/cache/apt/archives/partial
-          !/var/cache/apt/archives/lock
-        key: apt-${{ runner.os }}-${{ runner.arch }}
+          /var/lib/dpkg/status
+          /var/lib/apt/lists/*
+        key: ${{ runner.os }}-apt-packages-${{ hashFiles('**/package.txt') }}
         restore-keys: |
-          apt-${{ runner.os }}
+          ${{ runner.os }}-apt-packages-
+          ${{ runner.os }}-
 
     # Install APT dependencies if not cached
     - name: Install APT Dependencies
@@ -86,17 +86,6 @@ runs:
           python3-dev \
           python3-venv
         sudo apt-get clean
-
-    # Cache APT packages after installation
-    - name: Save APT Cache
-      if: steps.restore.outputs.cache-hit != 'true'
-      uses: actions/cache@v3
-      with:
-        path: |
-          /var/cache/apt/archives
-          !/var/cache/apt/archives/partial
-          !/var/cache/apt/archives/lock
-        key: apt-${{ runner.os }}-${{ runner.arch }}
 
     # UV environment setup
     - uses: astral-sh/setup-uv@v4
