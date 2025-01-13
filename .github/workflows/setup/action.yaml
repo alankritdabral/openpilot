@@ -16,7 +16,8 @@ runs:
       run: |
         echo "CACHE_COMMIT_DATE=$(git log -1 --pretty='format:%cd' --date=format:'%Y-%m-%d-%H:%M')" >> $GITHUB_ENV
         echo "apt-cache-${{ runner.os }}-${{ runner.arch }}-${{ env.CACHE_COMMIT_DATE }}" > cache-key.txt
-        sudo chmod -R a+rwx /var/lib/apt/lists/partial 
+        sudo mkdir -p /var/lib/apt/lists/partial
+        sudo chmod -R a+rwx /var/lib/apt/lists/partial
 
     - name: Cache apt packages
       uses: actions/cache@v3
