@@ -100,12 +100,6 @@ runs:
     - shell: bash
       run: uv sync --frozen --all-extras
 
-    # Update apt-get cache and install dependencies
-    - name: Install Ubuntu dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y <package-names> # Replace with your packages
-
     # Save apt-cache
     - name: Save APT cache
       uses: actions/cache@v3
