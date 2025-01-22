@@ -19,18 +19,35 @@ runs:
     - name: Restore APT cache
       uses: actions/cache@v3
       with:
-        path: /var/cache/apt
-        key: ${{ runner.os }}-apt-cache
+        path: /usr/bin
+        key: ${{ runner.os }}-apt-bin
         restore-keys: |
-          ${{ runner.os }}-apt-cache
+          ${{ runner.os }}-apt-bin
     # Restore apt-list
     - name: Restore APT list
       uses: actions/cache@v3
       with:
-        path: /var/lib/apt
-        key: ${{ runner.os }}-apt-list
+        path: /usr/include
+        key: ${{ runner.os }}-apt-include
         restore-keys: |
-          ${{ runner.os }}-apt-list
+          ${{ runner.os }}-apt-include
+      # Restore apt-cache
+    - name: Restore APT cache
+      uses: actions/cache@v3
+      with:
+        path: /usr/lib
+        key: ${{ runner.os }}-apt-lib
+        restore-keys: |
+          ${{ runner.os }}-apt-lib
+    # Restore apt-list
+    - name: Restore APT list
+      uses: actions/cache@v3
+      with:
+        path: /usr/share
+        key: ${{ runner.os }}-apt-share
+        restore-keys: |
+          ${{ runner.os }}-apt-share
+
 
     # Install APT dependencies if not cached
     - name: Install APT Dependencies
@@ -104,15 +121,29 @@ runs:
     - name: Save APT cache
       uses: actions/cache@v3
       with:
-        path: /var/cache/apt
-        key: ${{ runner.os }}-apt-cache
+        path: /usr/bin
+        key: ${{ runner.os }}-apt-bin
 
     # Save apt-list
     - name: Save APT list
       uses: actions/cache@v3
       with:
-        path: /var/lib/apt
-        key: ${{ runner.os }}-apt-list
+        path: /usr/include
+        key: ${{ runner.os }}-apt-include
+
+    # Save apt-cache
+    - name: Save APT cache
+      uses: actions/cache@v3
+      with:
+        path: /usr/lib
+        key: ${{ runner.os }}-apt-lib
+
+    # Save apt-list
+    - name: Save APT list
+      uses: actions/cache@v3
+      with:
+        path: /usr/share
+        key: ${{ runner.os }}-apt-share
 
     # Post-job cleanup
     - shell: bash
