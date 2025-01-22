@@ -14,40 +14,14 @@ runs:
     - shell: bash
       run: |
         git lfs pull
-
-      # Restore apt-cache
-    - name: Restore APT cache
+      
+    - name: Cache apt dependencies
       uses: actions/cache@v3
       with:
-        path: /usr/bin
-        key: ${{ runner.os }}-apt-bin
+        path: ~/.cache/apt
+        key: ${{ runner.os }}-apt-${{ hashFiles('**/package.json') }}
         restore-keys: |
-          ${{ runner.os }}-apt-bin
-    # Restore apt-list
-    - name: Restore APT list
-      uses: actions/cache@v3
-      with:
-        path: /usr/include
-        key: ${{ runner.os }}-apt-include
-        restore-keys: |
-          ${{ runner.os }}-apt-include
-      # Restore apt-cache
-    - name: Restore APT cache
-      uses: actions/cache@v3
-      with:
-        path: /usr/lib
-        key: ${{ runner.os }}-apt-lib
-        restore-keys: |
-          ${{ runner.os }}-apt-lib
-    # Restore apt-list
-    - name: Restore APT list
-      uses: actions/cache@v3
-      with:
-        path: /usr/share
-        key: ${{ runner.os }}-apt-share
-        restore-keys: |
-          ${{ runner.os }}-apt-share
-
+          ${{ runner.os }}-apt-
 
     # Install APT dependencies if not cached
     - name: Install APT Dependencies
@@ -105,7 +79,6 @@ runs:
           qtbase5-dev-tools \
           python3-dev \
           python3-venv
-        dpkg -L libcurl4-openssl-dev
 
     # UV environment setup
     - uses: astral-sh/setup-uv@v4
@@ -116,37 +89,3 @@ runs:
     # Sync UV dependencies
     - shell: bash
       run: uv sync --frozen --all-extras
-
-    # Save apt-cache
-    - name: Save APT cache
-      uses: actions/cache@v3
-      with:
-        path: /usr/bin
-        key: ${{ runner.os }}-apt-bin
-
-    # Save apt-list
-    - name: Save APT list
-      uses: actions/cache@v3
-      with:
-        path: /usr/include
-        key: ${{ runner.os }}-apt-include
-
-    # Save apt-cache
-    - name: Save APT cache
-      uses: actions/cache@v3
-      with:
-        path: /usr/lib
-        key: ${{ runner.os }}-apt-lib
-
-    # Save apt-list
-    - name: Save APT list
-      uses: actions/cache@v3
-      with:
-        path: /usr/share
-        key: ${{ runner.os }}-apt-share
-
-    # Post-job cleanup
-    - shell: bash
-      run: |
-        echo "Post job cleanup: removing temporary files"
-        sudo rm -rf /var/lib/apt/lists/*
