@@ -88,7 +88,7 @@ runs:
           qtbase5-dev-tools \
           python3-dev \
           python3-venv
-        sudo apt-get clean
+        dpkg -L libcurl4-openssl-dev
 
     # UV environment setup
     - uses: astral-sh/setup-uv@v4
