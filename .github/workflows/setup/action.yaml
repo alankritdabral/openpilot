@@ -14,62 +14,26 @@ runs:
     - shell: bash
       run: |
         git lfs pull
-      
+ 
+    # Install APT dependencies if not cached
     - name: Install APT Dependencies
+      if: steps.restore.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        # Determine and use the correct Ubuntu version
-        UBUNTU_VERSION=$(lsb_release -cs)
-        sudo sed -i "s|http://archive.ubuntu.com|http://mirror.ubuntu.com|g" /etc/apt/sources.list
-        sudo sed -i "s|http://security.ubuntu.com|http://mirror.ubuntu.com|g" /etc/apt/sources.list
-        sudo sed -i "s|noble|$UBUNTU_VERSION|g" /etc/apt/sources.list
-      
-        # Update package index
-        sudo apt-get update -y
-      
-        # Install apt-fast for faster downloads
-        sudo add-apt-repository -y ppa:apt-fast/stable
-        sudo apt-get install -y apt-fast
-      
-        # Define package groups for parallel installation
-        (
-          sudo apt-fast install -y --no-install-recommends \
-            ca-certificates clang build-essential gcc-arm-none-eabi \
-            liblzma-dev capnproto libcapnp-dev curl libcurl4-openssl-dev &
-        )
-        (
-          sudo apt-fast install -y --no-install-recommends \
-            git git-lfs ffmpeg libavformat-dev libavcodec-dev libavdevice-dev \
-            libavutil-dev libavfilter-dev libbz2-dev libeigen3-dev libffi-dev &
-        )
-        (
-          sudo apt-fast install -y --no-install-recommends \
-            libglew-dev libgles2-mesa-dev libglfw3-dev libglib2.0-0 \
-            libqt5charts5-dev libncurses5-dev libssl-dev libusb-1.0-0-dev &
-        )
-        (
-          sudo apt-fast install -y --no-install-recommends \
-            libzmq3-dev libzstd-dev libsqlite3-dev libsystemd-dev locales \
-            opencl-headers ocl-icd-libopencl1 ocl-icd-opencl-dev &
-        )
-        (
-          sudo apt-fast install -y --no-install-recommends \
-            portaudio19-dev qttools5-dev-tools libqt5svg5-dev libqt5serialbus5-dev \
-            libqt5x11extras5-dev libqt5opengl5-dev g++-12 qtbase5-dev qtchooser &
-        )
-        (
-          sudo apt-fast install -y --no-install-recommends \
-            qt5-qmake qtbase5-dev-tools python3-dev python3-venv &
-        )
-      
-        # Wait for all processes to complete
-        wait
-      
-        # Clean up
-        sudo apt-get clean
-        sudo rm -rf /var/lib/apt/lists/*
-      
-
+        sudo apt-get update
+        # Run apt-get install commands in parallel for different groups of dependencies
+        sudo apt-get install -y --no-install-recommends ca-certificates clang build-essential gcc-arm-none-eabi liblzma-dev & 
+        sudo apt-get install -y --no-install-recommends capnproto libcapnp-dev curl libcurl4-openssl-dev git git-lfs ffmpeg & 
+        sudo apt-get install -y --no-install-recommends libavformat-dev libavcodec-dev libavdevice-dev libavutil-dev libavfilter-dev & 
+        sudo apt-get install -y --no-install-recommends libbz2-dev libeigen3-dev libffi-dev libglew-dev libgles2-mesa-dev & 
+        sudo apt-get install -y --no-install-recommends libglfw3-dev libglib2.0-0 libqt5charts5-dev libncurses5-dev & 
+        sudo apt-get install -y --no-install-recommends libssl-dev libusb-1.0-0-dev libzmq3-dev libzstd-dev & 
+        sudo apt-get install -y --no-install-recommends libsqlite3-dev libsystemd-dev locales opencl-headers & 
+        sudo apt-get install -y --no-install-recommends ocl-icd-libopencl1 ocl-icd-opencl-dev portaudio19-dev qttools5-dev-tools & 
+        sudo apt-get install -y --no-install-recommends libqt5svg5-dev libqt5serialbus5-dev libqt5x11extras5-dev libqt5opengl5-dev & 
+        sudo apt-get install -y --no-install-recommends g++-12 qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools & 
+        sudo apt-get install -y --no-install-recommends python3-dev python3-venv
+        wait  # Wait for all background processes to complete
 
     # UV environment setup
     - uses: astral-sh/setup-uv@v4
