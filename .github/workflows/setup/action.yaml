@@ -20,8 +20,8 @@ runs:
       if: steps.restore.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        chmod +x a.sh
-        ./a.sh
+        chmod +x ".github/workflows/setup/a.sh"
+        ./".github/workflows/setup/a.sh"
 
     # UV environment setup
     - uses: astral-sh/setup-uv@v4
