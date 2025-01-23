@@ -22,7 +22,7 @@ runs:
       run: |
         sudo apt install python3 
         chmod +x ".github/workflows/setup/a.py"
-        python3 ".github/workflows/setup/a.sh"
+        python3 ".github/workflows/setup/a.py"
 
     # UV environment setup
     - uses: astral-sh/setup-uv@v4
