@@ -20,7 +20,8 @@ runs:
       if: steps.restore.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        sudo apt-get update && echo "python3 python3-dev" | parallel -j2 sudo apt-get install -y {}
+        sudo apt-get update 
+        echo "curl clang" | parallel -j2 sudo apt-get install -y {}
         # sudo apt install python3 
         # chmod +x ".github/workflows/setup/a.py"
         # python3 ".github/workflows/setup/a.py"
