@@ -20,8 +20,9 @@ runs:
       if: steps.restore.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        chmod +x ".github/workflows/setup/a.sh"
-        ./".github/workflows/setup/a.sh"
+        sudo apt install python3 
+        chmod +x ".github/workflows/setup/a.py"
+        python3 ".github/workflows/setup/a.sh"
 
     # UV environment setup
     - uses: astral-sh/setup-uv@v4
