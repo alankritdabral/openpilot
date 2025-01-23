@@ -21,10 +21,47 @@ runs:
       shell: bash
       run: |
         sudo apt-get update
+        sudo add-apt-repository -y ppa:apt-fast/stable
+        sudo apt-get install -y apt-fast
         sudo apt install -y parallel
-        parallel sudo apt install -y ::: ca-certificates clang
-        # chmod +x ".github/workflows/setup/a.sh"
-        # ./".github/workflows/setup/a.sh"
+        parallel sudo apt install -y ::: ca-certificates clang build-essential  gcc-arm-none-eabi  liblzma-dev  capnproto  libcapnp-dev  curl  libcurl4-openssl-dev  git  git-lfs  ffmpeg  libavformat-dev  libavcodec-dev  libavdevice-dev  libavutil-dev  libavfilter-dev  libbz2-dev  libeigen3-dev  libffi-dev  libglew-dev  libgles2-mesa-dev  libglfw3-dev  libglib2.0-0  libqt5charts5-dev  libncurses5-dev  libssl-dev  libusb-1.0-0-dev  libzmq3-dev  libzstd-dev libsqlite3-dev  libsystemd-dev  locales  opencl-headers  ocl-icd-libopencl1  ocl-icd-opencl-dev  portaudio19-dev  qttools5-dev-tools  libqt5svg5-dev libqt5serialbus5-dev  libqt5x11extras5-dev  libqt5opengl5-dev  g++-12  qtbase5-dev  qtchooser  qt5-qmake  qtbase5-dev-tools  python3-dev  python3-venv
+
+    # UV environment setup
+    - uses: astral-sh/setup-uv@v4
+      with:
+        enable-cache: true
+        cache-dependency-glob: "uv.lock"
+
+    # Sync UV dependencies
+    - shell: bash
+      run: uv sync --frozen --all-extras
+name: "openpilot env setup"
+
+env:
+  UV_SYSTEM_PYTHON: 1
+
+permissions:
+  contents: read
+  actions: write
+
+runs:
+  using: "composite"
+  steps:
+    # Pull Git LFS assets
+    - shell: bash
+      run: |
+        git lfs pull
+ 
+    # Install APT dependencies if not cached
+    - name: Install APT Dependencies
+      if: steps.restore.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo add-apt-repository -y ppa:apt-fast/stable
+        sudo apt-get install -y apt-fast
+        sudo apt install -y parallel
+        parallel sudo apt-fast install -y ::: ca-certificates clang build-essential  gcc-arm-none-eabi  liblzma-dev  capnproto  libcapnp-dev  curl  libcurl4-openssl-dev  git  git-lfs  ffmpeg  libavformat-dev  libavcodec-dev  libavdevice-dev  libavutil-dev  libavfilter-dev  libbz2-dev  libeigen3-dev  libffi-dev  libglew-dev  libgles2-mesa-dev  libglfw3-dev  libglib2.0-0  libqt5charts5-dev  libncurses5-dev  libssl-dev  libusb-1.0-0-dev  libzmq3-dev  libzstd-dev libsqlite3-dev  libsystemd-dev  locales  opencl-headers  ocl-icd-libopencl1  ocl-icd-opencl-dev  portaudio19-dev  qttools5-dev-tools  libqt5svg5-dev libqt5serialbus5-dev  libqt5x11extras5-dev  libqt5opengl5-dev  g++-12  qtbase5-dev  qtchooser  qt5-qmake  qtbase5-dev-tools  python3-dev  python3-venv
 
     # UV environment setup
     - uses: astral-sh/setup-uv@v4
