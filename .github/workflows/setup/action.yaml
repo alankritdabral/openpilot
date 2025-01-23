@@ -20,8 +20,8 @@ runs:
       if: steps.restore.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        chmod +x parallel_install.sh
-        ./parallel_install.sh
+        chmod +x a.sh
+        ./a.sh
 
     # UV environment setup
     - uses: astral-sh/setup-uv@v4
