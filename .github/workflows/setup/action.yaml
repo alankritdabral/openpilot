@@ -22,7 +22,7 @@ runs:
       run: |
         sudo apt-get update
         sudo apt install -y parallel
-        echo "liblzma-dev capnproto" | parallel -j2 sudo apt install -y {}
+        parallel sudo apt install -y ::: ca-certificates clang
         # chmod +x ".github/workflows/setup/a.sh"
         # ./".github/workflows/setup/a.sh"
 
