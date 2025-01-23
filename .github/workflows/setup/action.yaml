@@ -21,10 +21,9 @@ runs:
       shell: bash
       run: |
         sudo apt-get update 
-        echo "curl clang" | parallel -j2 sudo apt-get install -y {}
-        # sudo apt install python3 
-        # chmod +x ".github/workflows/setup/a.py"
-        # python3 ".github/workflows/setup/a.py"
+        sudo apt install parallel
+        chmod +x ".github/workflows/setup/a.sh"
+        ./".github/workflows/setup/a.sh"
 
     # UV environment setup
     - uses: astral-sh/setup-uv@v4
