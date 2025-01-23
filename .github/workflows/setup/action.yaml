@@ -20,10 +20,11 @@ runs:
       if: steps.restore.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        sudo apt-get update 
-        sudo apt install parallel
-        chmod +x ".github/workflows/setup/a.sh"
-        ./".github/workflows/setup/a.sh"
+        sudo apt-get update
+        sudo apt install -y parallel
+        echo "liblzma-dev capnproto" | parallel -j2 sudo apt install -y {}
+        # chmod +x ".github/workflows/setup/a.sh"
+        # ./".github/workflows/setup/a.sh"
 
     # UV environment setup
     - uses: astral-sh/setup-uv@v4
