@@ -20,11 +20,11 @@ runs:
       if: steps.restore.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        sudo apt-get update
-        sudo add-apt-repository -y ppa:apt-fast/stable
-        sudo apt-get install -y apt-fast
+        # sudo apt-get update
+        # sudo add-apt-repository -y ppa:apt-fast/stable
+        # sudo apt-get install -y apt-fast
         sudo apt install -y parallel
-        parallel sudo apt-fast install -y ::: ca-certificates clang build-essential  
+        parallel sudo apt install -y ::: ca-certificates clang build-essential  
 
     # UV environment setup
     - uses: astral-sh/setup-uv@v4
