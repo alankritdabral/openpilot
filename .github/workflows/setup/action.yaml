@@ -22,9 +22,6 @@ runs:
       run: |
         sudo DEBIAN_FRONTEND=noninteractive apt-get update
         sudo DEBIAN_FRONTEND=noninteractive add-apt-repository -y ppa:apt-fast/stable
-        echo debconf apt-fast/maxdownloads string 100000 | sudo debconf-set-selections
-        echo debconf apt-fast/dlflag boolean true | sudo debconf-set-selections
-        echo debconf apt-fast/aptmanager string apt-get | sudo debconf-set-selections
         sudo DEBIAN_FRONTEND=noninteractive apt-get install -y apt-fast
         sudo DEBIAN_FRONTEND=noninteractive apt-fast install -y --no-install-recommends \
           ca-certificates \
