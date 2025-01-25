@@ -10,7 +10,6 @@ permissions:
 runs:
   using: "composite"
   steps:
-
     - shell: bash
       run: |
         git lfs pull
@@ -23,7 +22,6 @@ runs:
         version: 1.0
         debug: true
 
-    # Install APT dependencies if not cached
     - name: Install APT Dependencies
       if: steps.cache-apt.outputs.cache-hit != 'true'
       shell: bash
@@ -32,12 +30,10 @@ runs:
         sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
           $(<.github/workflows/setup/apt-packages.txt)
 
-    # UV environment setup
     - uses: astral-sh/setup-uv@v4
       with:
         enable-cache: true
         cache-dependency-glob: "uv.lock"
 
-    # Sync UV dependencies
     - shell: bash
       run: uv sync --frozen --all-extras
