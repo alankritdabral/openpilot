@@ -13,11 +13,6 @@ runs:
     - shell: bash
       run: |
         git lfs pull
-
-    - name: Read APT packages list
-      id: apt-packages
-      shell: bash
-      run: |
         PACKAGES=$(tr '\n' ' ' <.github/workflows/setup/apt-packages.txt)
         echo "packages=${PACKAGES}" >> $GITHUB_OUTPUT
 
