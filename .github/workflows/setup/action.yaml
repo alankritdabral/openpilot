@@ -12,28 +12,35 @@ permissions:
 runs:
   using: "composite"
   steps:
-    # Configure APT to use aria2 for parallel downloads
-    - name: Setup APT parallel downloads
+    # Configure APT to use user-writable cache
+    - name: Setup APT cache directory
       shell: bash
       run: |
-        sudo apt-get update
-        sudo apt-get install -y aria2
-        echo 'Acquire::http::User-Agent "Mozilla/5.0";' | sudo tee /etc/apt/apt.conf.d/00useragent
-        echo 'Acquire::http::Pipeline-Depth "10";' | sudo tee -a /etc/apt/apt.conf.d/00useragent
-        echo 'Acquire::Queue-Mode "access";' | sudo tee -a /etc/apt/apt.conf.d/00useragent
-        echo 'Acquire::Retries "3";' | sudo tee -a /etc/apt/apt.conf.d/00useragent
+        # Create user-controlled cache directory
+        mkdir -p ~/.apt-cache/archives/partial
+        sudo rm -rf /var/cache/apt/archives
+        sudo ln -s ~/.apt-cache/archives /var/cache/apt/
+
+        # Configure APT to use custom cache
+        echo 'Dir::Cache "~/.apt-cache";' | sudo tee /etc/apt/apt.conf.d/90user-cache
+        echo 'Dir::Cache::archives "archives";' | sudo tee -a /etc/apt/apt.conf.d/90user-cache
 
     # Cache configuration
     - name: Cache APT packages
       uses: actions/cache@v4
       with:
-        path: /var/cache/apt/archives
+        path: ~/.apt-cache
         key: apt-${{ hashFiles('**/setup-actions.yml') }}-${{ runner.os }}
+        restore-keys: |
+          apt-${{ runner.os }}
 
     # System setup
     - name: Configure environment
       shell: bash
       run: |
+        # Clean up any existing locks
+        sudo rm -f ~/.apt-cache/archives/lock
+        
         # Use Azure mirrors
         sudo sed -i \
           -e 's|http://archive.ubuntu.com|http://azure.archive.ubuntu.com|g' \
@@ -49,13 +56,12 @@ runs:
       shell: bash
       run: |
         sudo apt-get install -y --no-install-recommends \
-          build-essential clang-15 g++-12 gcc-arm-none-eabi \
+          build-essential clang g++-12 gcc-arm-none-eabi \
           libavcodec-dev libavdevice-dev libavfilter-dev libavformat-dev libavutil-dev \
           libbz2-dev libcapnp-dev libcurl4-openssl-dev libeigen3-dev libffi-dev \
           libglfw3-dev libglew-dev liblzma-dev libncurses5-dev libssl-dev \
           libusb-1.0-0-dev libzmq3-dev libzstd-dev ocl-icd-opencl-dev \
-          portaudio19-dev python3-dev python3-venv qtbase5-dev \
-          libqt5charts5-dev libqt5svg5-dev libqt5serialbus5-dev
+          portaudio19-dev python3-dev python3-venv qtbase5-dev
 
     # Python environment
     - uses: astral-sh/setup-uv@v4
@@ -65,3 +71,11 @@ runs:
     - name: Install Python dependencies
       shell: bash
       run: uv sync --frozen --all-extras
+
+    # Cleanup before caching
+    - name: Prepare for caching
+      shell: bash
+      run: |
+        # Remove lock files and partial downloads
+        rm -f ~/.apt-cache/archives/lock
+        rm -rf ~/.apt-cache/archives/partial/*
