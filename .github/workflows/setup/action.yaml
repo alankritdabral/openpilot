@@ -27,8 +27,11 @@ runs:
         sudo sed -i 's/http:\/\/archive\.ubuntu\.com/http:\/\/azure\.archive\.ubuntu\.com/' /etc/apt/sources.list
         sudo sed -i 's/http:\/\/security\.ubuntu\.com/http:\/\/azure\.archive\.ubuntu\.com/' /etc/apt/sources.list
         
-        # Enable universe repository
-        sudo add-apt-repository -y universe
+        # Manually enable universe for all components
+        sudo sed -i '/azure\.archive\.ubuntu\.com/s/ main/ main universe/' /etc/apt/sources.list
+        sudo sed -i '/azure\.archive\.ubuntu\.com/s/ security/ security universe/' /etc/apt/sources.list
+        sudo sed -i '/azure\.archive\.ubuntu\.com/s/ updates/ updates universe/' /etc/apt/sources.list
+        sudo sed -i '/azure\.archive\.ubuntu\.com/s/ backports/ backports universe/' /etc/apt/sources.list
         
         # Run LFS pull and APT update in parallel
         git lfs pull &
