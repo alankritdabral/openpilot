@@ -64,4 +64,4 @@ runs:
 
     - name: Install Python dependencies
       shell: bash
-      run: uv pip install -r requirements.txt --no-cache-dir
+      run: uv sync --frozen --all-extras
