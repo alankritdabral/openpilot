@@ -13,7 +13,6 @@ runs:
 
     # Install APT dependencies if not cached
     - name: Install APT Dependencies
-      if: steps.restore.outputs.cache-hit != 'true'
       shell: bash
       run: |
         git lfs pull &
