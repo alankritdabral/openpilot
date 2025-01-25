@@ -12,12 +12,17 @@ permissions:
 runs:
   using: "composite"
   steps:
-    # Configure APT to use user-writable cache
-    - name: Setup APT cache directory
+    # Configure APT cache with proper permissions
+    - name: Setup APT cache
       shell: bash
       run: |
-        # Create user-controlled cache directory
+        # Create cache directory with group permissions
         mkdir -p ~/.apt-cache/archives/partial
+        sudo chown -R runner:sudo ~/.apt-cache
+        sudo chmod -R 775 ~/.apt-cache
+        sudo find ~/.apt-cache -type d -exec chmod g+s {} \;
+
+        # Symlink system APT cache
         sudo rm -rf /var/cache/apt/archives
         sudo ln -s ~/.apt-cache/archives /var/cache/apt/
 
@@ -30,17 +35,14 @@ runs:
       uses: actions/cache@v4
       with:
         path: ~/.apt-cache
-        key: apt-${{ hashFiles('**/setup-actions.yml') }}-${{ runner.os }}
+        key: apt-${{ hashFiles('.github/workflows/setup.yml') }}-${{ runner.os }}
         restore-keys: |
           apt-${{ runner.os }}
 
     # System setup
-    - name: Configure environment
+    - name: Configure repositories
       shell: bash
       run: |
-        # Clean up any existing locks
-        sudo rm -f ~/.apt-cache/archives/lock
-        
         # Use Azure mirrors
         sudo sed -i \
           -e 's|http://archive.ubuntu.com|http://azure.archive.ubuntu.com|g' \
