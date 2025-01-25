@@ -2,6 +2,8 @@ name: "openpilot env setup"
 
 env:
   UV_SYSTEM_PYTHON: 1
+  DEBIAN_FRONTEND: noninteractive
+  UCF_FORCE_CONFFOLD: 1
 
 permissions:
   contents: read
@@ -10,41 +12,44 @@ permissions:
 runs:
   using: "composite"
   steps:
-    # Pull Git LFS assets
-    - shell: bash
-      run: |
-        git lfs pull
-
     # Cache APT packages
-    - name: Cache APT packages
-      id: apt-cache
-      uses: actions/cache@v3
+    - name: Cache APT
+      uses: actions/cache@v4
       with:
         path: /var/cache/apt/archives
-        key: apt-${{ runner.os }}-${{ hashFiles('**/apt-packages.txt') }}
-        restore-keys: |
-          apt-${{ runner.os }}-
+        key: apt-${{ hashFiles('**/*.yml') }}-${{ runner.os }}
+
+    # Parallel initialization
+    - name: Parallel setup
+      shell: bash
+      run: |
+        # Use faster Azure mirrors
+        sudo sed -i 's/http:\/\/archive\.ubuntu\.com/http:\/\/azure\.archive\.ubuntu\.com/' /etc/apt/sources.list
+        sudo sed -i 's/http:\/\/security\.ubuntu\.com/http:\/\/azure\.archive\.ubuntu\.com/' /etc/apt/sources.list
+        
+        # Run LFS pull and APT update in parallel
+        git lfs pull &
+        sudo apt-get update &
+        wait
 
     # Install APT dependencies if not cached
     - name: Install APT Dependencies
-      if: steps.restore.outputs.cache-hit != 'true'
+      if: steps.Cache-APT.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        sudo DEBIAN_FRONTEND=noninteractive apt-get update
-        sudo DEBIAN_FRONTEND=noninteractive add-apt-repository -y ppa:apt-fast/stable
-        sudo DEBIAN_FRONTEND=noninteractive apt-get install -y apt-fast
-        sudo DEBIAN_FRONTEND=noninteractive apt-fast install -y --no-install-recommends \
-          ca-certificates \
+        # Add apt-fast repo directly
+        sudo sh -c "echo 'deb http://ppa.launchpad.net/apt-fast/stable/ubuntu $(lsb_release -sc) main' > /etc/apt/sources.list.d/apt-fast.list"
+        sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A2166B8DE8BDC3367D1901C11EE2FF37CA8DA16B
+        
+        sudo apt-get install -y apt-fast
+        sudo apt-fast install -y --no-install-recommends \
           clang \
           build-essential \
           gcc-arm-none-eabi \
           liblzma-dev \
           capnproto \
           libcapnp-dev \
-          curl \
           libcurl4-openssl-dev \
-          git \
-          git-lfs \
           ffmpeg \
           libavformat-dev \
           libavcodec-dev \
@@ -66,7 +71,6 @@ runs:
           libzstd-dev \
           libsqlite3-dev \
           libsystemd-dev \
-          locales \
           opencl-headers \
           ocl-icd-libopencl1 \
           ocl-icd-opencl-dev \
@@ -84,11 +88,11 @@ runs:
           python3-dev \
           python3-venv
 
-    # UV environment setup
+    # UV environment setup with better caching
     - uses: astral-sh/setup-uv@v4
       with:
         enable-cache: true
-        cache-dependency-glob: "uv.lock"
+        cache-key: uv-${{ hashFiles('uv.lock') }}
 
     # Sync UV dependencies
     - shell: bash
