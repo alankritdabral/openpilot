@@ -16,86 +16,79 @@ runs:
     - name: Cache APT
       uses: actions/cache@v4
       with:
-        path: /var/cache/apt/archives
-        key: apt-${{ hashFiles('**/*.yml') }}-${{ runner.os }}
+        path: |
+          /var/cache/apt/archives
+          /home/runner/.apt-fast
+        key: apt-${{ hashFiles('**/setup-actions.yml') }}-${{ runner.os }}
+
+    # Base system setup
+    - name: Configure repositories
+      shell: bash
+      run: |
+        # Force-enable universe for all repositories
+        sudo sed -i -E \
+          -e 's|(http://azure\.archive\.ubuntu\.com/ubuntu noble[^ ]*)|\1 universe|g' \
+          -e 's|(http://security\.ubuntu\.com/ubuntu noble-security[^ ]*)|\1 universe|g' \
+          /etc/apt/sources.list
+
+        # Add APT-Fast PPA directly (noble not officially supported)
+        echo "deb [trusted=yes] http://ppa.launchpad.net/apt-fast/stable/ubuntu jammy main" | sudo tee /etc/apt/sources.list.d/apt-fast.list
+
+        # Configure parallel downloads
+        echo 'APT::Acquire::Queue-Mode "access";' | sudo tee /etc/apt/apt.conf.d/99parallel
+        echo 'APT::Acquire::Retries "3";' | sudo tee -a /etc/apt/apt.conf.d/99parallel
 
     # Parallel initialization
-    - name: Parallel setup
+    - name: Initialize environment
       shell: bash
       run: |
-        # Use faster Azure mirrors
-        sudo sed -i 's/http:\/\/archive\.ubuntu\.com/http:\/\/azure\.archive\.ubuntu\.com/' /etc/apt/sources.list
-        sudo sed -i 's/http:\/\/security\.ubuntu\.com/http:\/\/azure\.archive\.ubuntu\.com/' /etc/apt/sources.list
-        
-        # Manually enable universe for all components
-        sudo sed -i '/azure\.archive\.ubuntu\.com/s/ main/ main universe/' /etc/apt/sources.list
-        sudo sed -i '/azure\.archive\.ubuntu\.com/s/ security/ security universe/' /etc/apt/sources.list
-        sudo sed -i '/azure\.archive\.ubuntu\.com/s/ updates/ updates universe/' /etc/apt/sources.list
-        sudo sed -i '/azure\.archive\.ubuntu\.com/s/ backports/ backports universe/' /etc/apt/sources.list
-        
-        # Run LFS pull and APT update in parallel
+        # Parallel setup
         git lfs pull &
-        sudo apt-get update &
+        
+        # APT update with retries
+        for i in {1..3}; do
+          sudo apt-get update && break
+          sleep $((i*5))
+        done &
+        
         wait
 
-    # Install APT dependencies if not cached
-    - name: Install APT Dependencies
-      if: steps.Cache-APT.outputs.cache-hit != 'true'
+    # Package installation with fallbacks
+    - name: Install system dependencies
       shell: bash
       run: |
-        sudo apt-get install -y apt-fast
-        sudo apt-fast install -y --no-install-recommends \
-          clang \
-          build-essential \
-          gcc-arm-none-eabi \
-          liblzma-dev \
-          capnproto \
-          libcapnp-dev \
-          libcurl4-openssl-dev \
-          ffmpeg \
-          libavformat-dev \
-          libavcodec-dev \
-          libavdevice-dev \
-          libavutil-dev \
-          libavfilter-dev \
-          libbz2-dev \
-          libeigen3-dev \
-          libffi-dev \
-          libglew-dev \
-          libgles2-mesa-dev \
-          libglfw3-dev \
-          libglib2.0-0 \
-          libqt5charts5-dev \
-          libncurses5-dev \
-          libssl-dev \
-          libusb-1.0-0-dev \
-          libzmq3-dev \
-          libzstd-dev \
-          libsqlite3-dev \
-          libsystemd-dev \
-          opencl-headers \
-          ocl-icd-libopencl1 \
-          ocl-icd-opencl-dev \
-          portaudio19-dev \
-          qttools5-dev-tools \
-          libqt5svg5-dev \
-          libqt5serialbus5-dev \
-          libqt5x11extras5-dev \
-          libqt5opengl5-dev \
-          g++-12 \
-          qtbase5-dev \
-          qtchooser \
-          qt5-qmake \
-          qtbase5-dev-tools \
-          python3-dev \
-          python3-venv
+        # Try to install apt-fast from PPA
+        if ! sudo apt-get install -y apt-fast; then
+          echo "PPA install failed, trying manual install..."
+          wget -q https://launchpad.net/~apt-fast/+archive/ubuntu/stable/+files/apt-fast_1.9.6-1~ubuntu20.04.1_all.deb
+          sudo dpkg -i apt-fast_*.deb || sudo apt-get -fy install
+        fi
 
-    # UV environment setup with better caching
-    - uses: astral-sh/setup-uv@v4
+        # Base package list
+        BASE_PKGS=(
+          build-essential clang g++-12 gcc-arm-none-eabi
+          libavcodec-dev libavdevice-dev libavfilter-dev libavformat-dev libavutil-dev
+          libbz2-dev libcapnp-dev libcurl4-openssl-dev libeigen3-dev libffi-dev
+          libglfw3-dev libglew-dev liblzma-dev libncurses5-dev libssl-dev
+          libusb-1.0-0-dev libzmq3-dev libzstd-dev ocl-icd-opencl-dev
+          portaudio19-dev python3-dev python3-venv qtbase5-dev
+        )
+
+        # Install using apt-fast if available, fallback to apt
+        if command -v apt-fast >/dev/null; then
+          sudo apt-fast install -y --no-install-recommends "${BASE_PKGS[@]}"
+        else
+          sudo apt-get install -y --no-install-recommends "${BASE_PKGS[@]}"
+          echo "Using fallback apt without parallel downloads"
+        fi
+
+    # Python environment setup
+    - name: Configure Python environment
+      uses: astral-sh/setup-uv@v4
       with:
         enable-cache: true
         cache-key: uv-${{ hashFiles('uv.lock') }}
 
-    # Sync UV dependencies
-    - shell: bash
-      run: uv sync --frozen --all-extras
+    - name: Sync dependencies
+      shell: bash
+      run: uv pip install -r requirements.txt --no-cache-dir
