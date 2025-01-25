@@ -11,6 +11,10 @@ runs:
   using: "composite"
   steps:
 
+    - shell: bash
+      run: |
+        git lfs pull
+
     - name: Cache APT packages
       uses: awalsh128/cache-apt-pkgs-action@latest
       with:
@@ -21,13 +25,9 @@ runs:
     - name: Install APT Dependencies
       shell: bash
       run: |
-        git lfs pull &
-        sudo DEBIAN_FRONTEND=noninteractive apt-get update &
-        wait
-        
-        sudo DEBIAN_FRONTEND=noninteractive add-apt-repository -y ppa:apt-fast/stable
-        sudo DEBIAN_FRONTEND=noninteractive apt-get install -y apt-fast
-        sudo DEBIAN_FRONTEND=noninteractive apt-fast install -y --no-install-recommends \
+        git lfs pull 
+        sudo apt-get update &        
+        sudo apt-get install -y --no-install-recommends \
           clang \
           build-essential \
           gcc-arm-none-eabi \
