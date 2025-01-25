@@ -14,11 +14,18 @@ runs:
       run: |
         git lfs pull
 
+    - name: Read APT packages list
+      id: apt-packages
+      shell: bash
+      run: |
+        PACKAGES=$(tr '\n' ' ' <.github/workflows/setup/apt-packages.txt)
+        echo "packages=${PACKAGES}" >> $GITHUB_OUTPUT
+
     - name: Cache APT packages
       id: cache-apt
-      uses: awalsh128/cache-apt-pkgs-action@latest
+      uses: awalsh128/cache-apt-pkgs-action@v1.4.0
       with:
-        packages: $(<.github/workflows/setup/apt-packages.txt)
+        packages: ${{ steps.apt-packages.outputs.packages }}
         version: 1.0
         debug: true
 
@@ -28,7 +35,7 @@ runs:
       run: |
         sudo DEBIAN_FRONTEND=noninteractive apt-get update 
         sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-          $(<.github/workflows/setup/apt-packages.txt)
+          ${{ steps.apt-packages.outputs.packages }}
 
     - uses: astral-sh/setup-uv@v4
       with:
