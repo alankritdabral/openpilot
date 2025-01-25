@@ -10,6 +10,11 @@ permissions:
 runs:
   using: "composite"
   steps:
+    # Pull Git LFS assets
+    - shell: bash
+      run: |
+        git lfs pull
+
     # Cache APT packages
     - name: Cache APT packages
       id: apt-cache
@@ -22,10 +27,12 @@ runs:
 
     # Install APT dependencies if not cached
     - name: Install APT Dependencies
-      if: steps.apt-cache.outputs.cache-hit != 'true'
+      if: steps.restore.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        sudo DEBIAN_FRONTEND=noninteractive apt-get update && \
+        sudo DEBIAN_FRONTEND=noninteractive apt-get update
+        sudo DEBIAN_FRONTEND=noninteractive add-apt-repository -y ppa:apt-fast/stable
+        sudo DEBIAN_FRONTEND=noninteractive apt-get install -y apt-fast
         sudo DEBIAN_FRONTEND=noninteractive apt-fast install -y --no-install-recommends \
           ca-certificates \
           clang \
@@ -76,10 +83,6 @@ runs:
           qtbase5-dev-tools \
           python3-dev \
           python3-venv
-
-    # Pull Git LFS assets
-    - shell: bash
-      run: git lfs pull
 
     # UV environment setup
     - uses: astral-sh/setup-uv@v4
