@@ -31,9 +31,6 @@ runs:
         wait
         
         sudo DEBIAN_FRONTEND=noninteractive add-apt-repository -y ppa:apt-fast/stable
-        # Add this before apt-fast install:
-        sudo sed -i 's/http:\/\/archive\.ubuntu\.com/http:\/\/azure\.archive\.ubuntu\.com/' /etc/apt/sources.list
-        sudo sed -i 's/http:\/\/security\.ubuntu\.com/http:\/\/azure\.archive\.ubuntu\.com/' /etc/apt/sources.list
         sudo DEBIAN_FRONTEND=noninteractive apt-get install -y apt-fast
         sudo DEBIAN_FRONTEND=noninteractive apt-fast install -y --no-install-recommends \
           clang \
