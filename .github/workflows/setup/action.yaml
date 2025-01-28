@@ -1,10 +1,10 @@
-name: 'openpilot env setup'
+name: "openpilot env setup"
 
 inputs:
   is_retried:
-    description: 'A mock param that asserts that we use the setup-with-retry instead of this action directly'
+    description: "A mock param that asserts that we use the setup-with-retry instead of this action directly"
     required: false
-    default: 'false'
+    default: "false"
 
 runs:
   using: "composite"
@@ -30,6 +30,12 @@ runs:
     - shell: bash
       run: git lfs pull
 
+    - id: normalize-file-permissions
+      shell: bash
+      name: Normalize file permissions to ensure a consistent docker build cache
+      run: |
+        find . -type f -executable -not -perm 755 -exec chmod 755 {} \;
+        find . -type f -not -executable -not -perm 644 -exec chmod 644 {} \;
     # build cache
     - id: date
       shell: bash
@@ -39,18 +45,33 @@ runs:
     - id: scons-cache
       uses: ./.github/workflows/auto-cache
       with:
-        path: .ci_cache/scons_cache
+        path: /tmp/scons_cache
         key: scons-${{ runner.arch }}-${{ env.CACHE_COMMIT_DATE }}-${{ github.sha }}
         restore-keys: |
           scons-${{ runner.arch }}-${{ env.CACHE_COMMIT_DATE }}
           scons-${{ runner.arch }}
     # as suggested here: https://github.com/moby/moby/issues/32816#issuecomment-910030001
-    - id: normalize-file-permissions
+    # install dependencies
+    - name: Read APT packages list
+      id: apt-packages
       shell: bash
-      name: Normalize file permissions to ensure a consistent docker build cache
       run: |
-        find . -type f -executable -not -perm 755 -exec chmod 755 {} \;
-        find . -type f -not -executable -not -perm 644 -exec chmod 644 {} \;
-    # build our docker image
+        PACKAGES=$(tr '\n' ' ' <.github/workflows/setup/apt-packages.txt)
+        echo "packages=${PACKAGES}" >> $GITHUB_OUTPUT
+
+    - name: Cache APT packages
+      # if: github.ref == 'refs/heads/master'
+      id: cache-apt
+      uses: awalsh128/cache-apt-pkgs-action@v1.4.0
+      with:
+        packages: ${{ steps.apt-packages.outputs.packages }}
+        version: 1.0
+        debug: true
+
+    - uses: astral-sh/setup-uv@v4
+      with:
+        enable-cache: true
+        cache-dependency-glob: "uv.lock"
+
     - shell: bash
-      run: eval ${{ env.BUILD }}
+      run: uv sync --frozen --all-extras
