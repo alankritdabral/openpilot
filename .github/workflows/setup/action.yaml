@@ -16,16 +16,6 @@ runs:
     # do this after checkout to ensure our custom LFS config is used to pull from GitLab
     - shell: bash
       run: git lfs pull
-    - name: Set up APT cache directory
-      id: apt-cache
-      shell: bash
-      run: |
-        sudo mkdir -p /var/cache/apt/archives
-        sudo mkdir -p /var/cache/apt/archives/partial
-        sudo chmod -R 777 /var/cache/apt/archives/partial
-        sudo chmod -R 777 /var/cache/apt/archives
-        sudo rm -rf /var/cache/apt/archives/partial
-        sudo rm -rf /var/cache/apt/archivesa
     - id: normalize-file-permissions
       shell: bash
       name: Normalize file permissions to ensure a consistent docker build cache
