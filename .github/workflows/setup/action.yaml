@@ -67,13 +67,13 @@ runs:
         sudo apt-get install -f
       # sudo dpkg -i *.deb
 
-    # - shell: bash
-    #   run: |
-    #     # Remove partial directory and fix ownership
-    #     sudo rm -rf ~/apt-cache/archives/partial
-    #     sudo chown -R $USER:$USER ~/apt-cache/archives
     - shell: bash
-      run: sudo rm -rf /var/cache/apt/archives/partial
+      run: |
+        # Remove partial directory and fix ownership
+        sudo rm -rf ~/apt-cache/archives/partial
+        sudo chown -R $USER:$USER ~/apt-cache/archives
+    # - shell: bash
+    #   run: sudo rm -rf /var/cache/apt/archives/partial
     - name: Save APT packages cache
       uses: actions/cache/save@v4
       with:
