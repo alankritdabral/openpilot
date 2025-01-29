@@ -72,8 +72,8 @@ runs:
     #     # Remove partial directory and fix ownership
     #     sudo rm -rf ~/apt-cache/archives/partial
     #     sudo chown -R $USER:$USER ~/apt-cache/archives
-    # - shell: bash
-    #   run: sudo rm -rf /var/cache/apt/archives/partial
+    - shell: bash
+      run: sudo rm -rf /var/cache/apt/archives/partial
     - name: Save APT packages cache
       uses: actions/cache/save@v4
       with:
