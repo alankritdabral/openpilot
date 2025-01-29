@@ -80,6 +80,7 @@ runs:
       shell: bash
       run: |
         cd ~/apt-cache/archives
+        sudo rm -f~/apt-cache/archives/lock-frontend
         find . -maxdepth 1 -name '*.deb' -print0 | xargs -0 -P 4 -n 5 sudo dpkg -i
 
     - shell: bash
