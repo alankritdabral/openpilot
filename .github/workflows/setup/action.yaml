@@ -64,7 +64,7 @@ runs:
       run: |
         cd ~/apt-cache/archives
         find ~/apt-cache/archives -name '*.deb' -print0 | xargs -0 -n1 -P$(nproc) sudo dpkg -i
-      # sudo apt-get install -f
+        sudo apt-get install -f
       # sudo dpkg -i *.deb
 
     - shell: bash
