@@ -43,7 +43,7 @@ runs:
         path: ~/apt-cache/archives # Changed to user directory
         key: Linux-apt-${{ runner.os }}-${{ hashFiles('.github/workflows/setup/apt-packages.txt') }}
     - name: Install packages and cache .deb files
-      if: steps.apt-cache.outputs.cache-hit != 'true'
+      if: steps.restore-cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
         sudo apt-get update
