@@ -16,7 +16,10 @@ runs:
     # do this after checkout to ensure our custom LFS config is used to pull from GitLab
     - shell: bash
       run: |
-          git lfs pull
+        start=$(date +%s)
+        git lfs pull
+        end=$(date +%s)
+        echo "Execution time: $((end - start)) seconds"
     # build cache
     - id: date
       shell: bash
@@ -47,8 +50,11 @@ runs:
       if: steps.apt-cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
+        start=$(date +%s)
         sudo apt-get update
         xargs -a .github/workflows/setup/apt-packages.txt sudo apt-get install -y --no-install-recommends
+        end=$(date +%s)
+        echo "Execution time: $((end - start)) seconds"
 
     - name: Install downloaded packages
       shell: bash
@@ -65,4 +71,8 @@ runs:
         enable-cache: true
         cache-dependency-glob: "uv.lock"
     - shell: bash
-      run: uv sync --frozen --all-extras
+      run: |
+        start=$(date +%s)
+        uv sync --frozen --all-extras
+        end=$(date +%s)
+        echo "Execution time: $((end - start)) seconds"
