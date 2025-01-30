@@ -60,9 +60,9 @@ runs:
         echo "Execution time: $((end - start)) seconds"
 
     - name: Install python packages
-      shell: bash
       uses: astral-sh/setup-uv@v4
       with:
         enable-cache: true
         cache-dependency-glob: "uv.lock"
+    - shell: bash
       run: uv sync --frozen --all-extras
