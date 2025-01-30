@@ -45,35 +45,30 @@ runs:
       with:
         path: ~/apt-cache/archives # Changed to user directory
         key: Linux-apt-${{ runner.os }}-${{ hashFiles('.github/workflows/setup/apt-packages.txt') }}
+    - name: Read packages from packages.txt
+      id: read-packages
+      shell: bash
+      run: |
+        PACKAGES=$(cat .github/workflows/setup/apt-packages.txt | tr '\n' ' ')
+        echo "PACKAGES=$PACKAGES" >> $GITHUB_ENV
     - name: Install packages and cache .deb files
       if: steps.apt-cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
         sudo apt-get update
-        xargs -a .github/workflows/setup/apt-packages.txt sudo apt-get install -y --no-install-recommends
+        sudo apt-get install -y --no-install-recommends $PACKAGES
 
-    # - name: Install downloaded packages
-    #   shell: bash
-    #   run: |
-    #     start=$(date +%s)
-    #     cd ~/apt-cache/archives
-    #     ls ~/apt-cache/archives/*.deb | xargs sudo dpkg -i
-    #     sudo apt-get install -f
-    #     end=$(date +%s)
-    #     echo "Execution time: $((end - start)) seconds"
+    - name: Install downloaded packages
+      shell: bash
+      run: |
+        start=$(date +%s)
+        cd ~/apt-cache/archives
+        ls ~/apt-cache/archives/*.deb | xargs sudo dpkg -i
+        sudo apt-get install -f
+        end=$(date +%s)
+        echo "Execution time: $((end - start)) seconds"
       # sudo dpkg -i *.deb
 
-    - shell: bash
-      run: |
-        # Remove partial directory and fix ownership
-        sudo rm -rf ~/apt-cache/archives/partial
-        sudo chown -R $USER:$USER ~/apt-cache/archives
-
-    - name: Save APT packages cache
-      uses: actions/cache/save@v4
-      with:
-        path: ~/apt-cache/archives
-        key: Linux-apt-${{ runner.os }}-${{ hashFiles('.github/workflows/setup/apt-packages.txt') }}
     - uses: astral-sh/setup-uv@v4
       with:
         enable-cache: true
