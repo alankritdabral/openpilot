@@ -15,7 +15,12 @@ runs:
         exit 1
     # do this after checkout to ensure our custom LFS config is used to pull from GitLab
     - shell: bash
-      run: git lfs pull
+      run: |
+          start=$(date +%s)
+          git lfs pull
+          end=$(date +%s)
+          echo "Execution time git lfs: $((end - start)) seconds"
+
     - id: normalize-file-permissions
       shell: bash
       name: Normalize file permissions to ensure a consistent docker build cache
@@ -62,9 +67,12 @@ runs:
     - name: Install downloaded packages
       shell: bash
       run: |
+        start=$(date +%s)
         cd ~/apt-cache/archives
         ls ~/apt-cache/archives/*.deb | xargs sudo dpkg -i
         sudo apt-get install -f
+        end=$(date +%s)
+        echo "Execution time: $((end - start)) seconds"
       # sudo dpkg -i *.deb
 
     - shell: bash
@@ -83,4 +91,8 @@ runs:
         enable-cache: true
         cache-dependency-glob: "uv.lock"
     - shell: bash
-      run: uv sync --frozen --all-extras
+      run: |
+        start=$(date +%s)
+        uv sync --frozen --all-extras
+        end=$(date +%s)
+        echo "Execution time: $((end - start)) seconds"
