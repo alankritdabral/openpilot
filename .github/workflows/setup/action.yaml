@@ -58,29 +58,36 @@ runs:
       uses: actions/cache/restore@v4
       with:
         path: ~/apt-cache/archives # Changed to user directory
-        key: Linux-apt-${{ runner.os }}-${{ hashFiles('tools/install_ubuntu_dependencies.sh') }}
+        key: Linux-apt-${{ runner.os }}-${{ hashFiles('tools/install_ubuntu_dependencies.sh) }}
 
     - shell: bash
       if: steps.apt-cache.outputs.cache-hit != 'true'
       run: sudo apt-get update
       
-    - name: Install packages and cache .deb files
+    - name: Install system packages
       shell: bash
       run: |
         start=$(date +%s)
-        export DEBIAN_FRONTEND=noninteractive
-        sudo ./tools/install_ubuntu_dependencies.sh
+        sudo DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install \
+          alien capnproto gcc-arm-none-eabi libcapnp-dev libeigen3-dev \
+          # Multimedia libraries
+          ffmpeg libavcodec-dev libavdevice-dev libavfilter-dev libavformat-dev libavutil-dev \
+          # GUI dependencies
+          gnome-screenshot libglew-dev libgles2-mesa-dev libglfw3-dev \
+          libqt5charts5-dev libqt5opengl5-dev libqt5serialbus5-dev libqt5svg5-dev \
+          libqt5x11extras5-dev qt5-qmake qtbase5-dev qtbase5-dev-tools qtchooser \
+          # System libraries
+          libbz2-dev libcurl4-openssl-dev liblzma-dev libncurses5-dev libsystemd-dev \
+          libusb-1.0-0-dev libzmq3-dev libzstd-dev x11-xserver-utils \
+          # Audio/Video
+          portaudio19-dev pulseaudio \
+          # OpenCL
+          ocl-icd-libopencl1 ocl-icd-opencl-dev opencl-headers \
+          # Python
+          python3-tk
+
         end=$(date +%s)
-        echo "Execution time: $((end - start)) seconds"
-        start=$(date +%s)
-        sudo apt-get -y --no-install-recommends install \
-          alien \
-          gnome-screenshot \
-          pulseaudio \
-          python3-tk \
-          x11-xserver-utils
-        end=$(date +%s)
-        echo "Execution time: $((end - start)) seconds"
+        echo "✅ Packages installed in $((end - start)) seconds"
 
     - name: Install python packages
       uses: astral-sh/setup-uv@v4
