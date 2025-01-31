@@ -60,13 +60,19 @@ runs:
         path: ~/apt-cache/archives # Changed to user directory
         key: Linux-apt-${{ runner.os }}-${{ hashFiles('tools/install_ubuntu_dependencies.sh') }}
 
+    - shell: bash
+      if: steps.apt-cache.outputs.cache-hit != 'true'
+      run: sudo apt-get update
+      
     - name: Install packages and cache .deb files
       shell: bash
       run: |
         start=$(date +%s)
         export DEBIAN_FRONTEND=noninteractive
-        sudo apt-get update
         sudo ./tools/install_ubuntu_dependencies.sh
+        end=$(date +%s)
+        echo "Execution time: $((end - start)) seconds"
+        start=$(date +%s)
         sudo apt-get -y --no-install-recommends install \
           alien \
           gnome-screenshot \
