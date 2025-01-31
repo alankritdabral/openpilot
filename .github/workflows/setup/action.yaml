@@ -65,7 +65,7 @@ runs:
       run: |
         start=$(date +%s)
         export DEBIAN_FRONTEND=noninteractive
-        sudo apt update
+        sudo apt-get update
         sudo ./tools/install_ubuntu_dependencies.sh
         sudo apt-get -y --no-install-recommends install \
           alien \
