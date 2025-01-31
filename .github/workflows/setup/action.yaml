@@ -65,6 +65,7 @@ runs:
       run: |
         start=$(date +%s)
         sudo apt-get update
+        chmod +x tools/install_ubuntu_dependencies.sh
         ./tools/install_ubuntu_dependencies.sh
         apt-get install -y --no-install-recommends alien gnome-screenshot pulseaudio python3-tk x11-xserver-utils
         end=$(date +%s)
