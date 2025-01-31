@@ -64,10 +64,19 @@ runs:
       shell: bash
       run: |
         start=$(date +%s)
-        sudo apt-get update
-        chmod +x tools/install_ubuntu_dependencies.sh
-        ./tools/install_ubuntu_dependencies.sh
-        apt-get install -y --no-install-recommends alien gnome-screenshot pulseaudio python3-tk x11-xserver-utils
+        # Configure environment for non-interactive operation
+        export DEBIAN_FRONTEND=noninteractive
+        export NEEDRESTART_MODE=a
+        
+        sudo -E apt-get -o DPkg::Lock::Timeout=60 -qq update
+        sudo -E ./tools/install_ubuntu_dependencies.sh
+        sudo -E apt-get -y --no-install-recommends install \
+          alien \
+          gnome-screenshot \
+          pulseaudio \
+          python3-tk \
+          x11-xserver-utils
+
         end=$(date +%s)
         echo "Execution time: $((end - start)) seconds"
 
