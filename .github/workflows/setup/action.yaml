@@ -61,7 +61,7 @@ runs:
         key: Linux-apt-${{ runner.os }}-${{ hashFiles('tools/install_ubuntu_dependencies.sh') }}
 
     - shell: bash
-      if: steps.apt-cache.outputs.cache-hit != 'true'
+      # if: steps.apt-cache.outputs.cache-hit != 'true'
       run: sudo apt-get update
       
     - name: Install system packages
