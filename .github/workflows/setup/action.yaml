@@ -109,7 +109,6 @@ runs:
           qtchooser \
           qttools5-dev-tools \
           x11-xserver-utils 
-
         end=$(date +%s)
         echo "✅ Packages installed in $((end - start)) seconds"
 
