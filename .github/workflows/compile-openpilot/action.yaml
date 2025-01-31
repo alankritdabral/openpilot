@@ -32,4 +32,4 @@ runs:
       uses: actions/cache/save@v4
       with:
         path: ~/apt-cache/archives
-        key: Linux-apt-${{ runner.os }}-${{ hashFiles('tools/install_ubuntu_dependencies.sh) }}
+        key: Linux-apt-${{ runner.os }}-${{ hashFiles('tools/install_ubuntu_dependencies.sh') }}
