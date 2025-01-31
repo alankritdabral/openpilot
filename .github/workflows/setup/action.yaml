@@ -61,7 +61,6 @@ runs:
         key: Linux-apt-${{ runner.os }}-${{ hashFiles('tools/install_ubuntu_dependencies.sh') }}
 
     - name: Install packages and cache .deb files
-      if: steps.apt-cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
         start=$(date +%s)
