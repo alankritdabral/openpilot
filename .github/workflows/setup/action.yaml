@@ -58,7 +58,7 @@ runs:
       uses: actions/cache/restore@v4
       with:
         path: ~/apt-cache/archives # Changed to user directory
-        key: Linux-apt-${{ runner.os }}-${{ hashFiles('tools/install_ubuntu_dependencies.sh) }}
+        key: Linux-apt-${{ runner.os }}-${{ hashFiles('tools/install_ubuntu_dependencies.sh') }}
 
     - shell: bash
       if: steps.apt-cache.outputs.cache-hit != 'true'
