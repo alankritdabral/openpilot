@@ -60,7 +60,7 @@ runs:
         path: ~/apt-cache/archives # Changed to user directory
         key: Linux-apt-${{ runner.os }}-${{ hashFiles('tools/install_ubuntu_dependencies.sh') }}
       
-    - name: Install system packages
+    - name: Install system packages on cache miss
       if: steps.apt-cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
@@ -79,7 +79,7 @@ runs:
         end=$(date +%s)
         echo "✅ Packages installed in $((end - start)) seconds"
 
-    - name: Install downloaded packages
+    - name: Install downloaded packages on cache hit
       if: steps.apt-cache.outputs.cache-hit == 'true'
       shell: bash
       run: |
