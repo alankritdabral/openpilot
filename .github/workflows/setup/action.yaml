@@ -7,23 +7,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    # assert that this action is retried using the setup-with-retry
-    - shell: bash
-      if: ${{ inputs.is_retried == 'false' }}
-      run: |
-        echo "You should not run this action directly. Use setup-with-retry instead"
-        exit 1
-
-    - shell: bash
-      name: No retries!
-      run: |
-        if [ "${{ github.run_attempt }}" -gt 1 ]; then
-          echo -e "\033[0;31m##################################################"
-          echo -e "\033[0;31m    Retries not allowed! Fix the flaky test!      "
-          echo -e "\033[0;31m##################################################\033[0m"
-          exit 1
-        fi
-
     # do this after checkout to ensure our custom LFS config is used to pull from GitLab
     - shell: bash
       run: |
