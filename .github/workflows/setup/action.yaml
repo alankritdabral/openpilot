@@ -7,6 +7,23 @@ inputs:
 runs:
   using: "composite"
   steps:
+    # assert that this action is retried using the setup-with-retry
+    - shell: bash
+      if: ${{ inputs.is_retried == 'false' }}
+      run: |
+        echo "You should not run this action directly. Use setup-with-retry instead"
+        exit 1
+
+    - shell: bash
+      name: No retries!
+      run: |
+        if [ "${{ github.run_attempt }}" -gt 1 ]; then
+          echo -e "\033[0;31m##################################################"
+          echo -e "\033[0;31m    Retries not allowed! Fix the flaky test!      "
+          echo -e "\033[0;31m##################################################\033[0m"
+          exit 1
+        fi
+
     # do this after checkout to ensure our custom LFS config is used to pull from GitLab
     - shell: bash
       run: |
@@ -42,14 +59,13 @@ runs:
       with:
         path: ~/apt-cache/archives # Changed to user directory
         key: Linux-apt-${{ runner.os }}-${{ hashFiles('tools/install_ubuntu_dependencies.sh') }}
-      
+
     - name: Install system packages on cache miss
       if: steps.apt-cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
         export DEBIAN_FRONTEND=noninteractive
         start=$(date +%s)
-        sudo apt-get update
         sudo ./tools/install_ubuntu_dependencies.sh
         end=$(date +%s)
         echo "Execution time: $((end - start)) seconds"
