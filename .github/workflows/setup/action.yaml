@@ -61,53 +61,33 @@ runs:
         key: Linux-apt-${{ runner.os }}-${{ hashFiles('tools/install_ubuntu_dependencies.sh') }}
       
     - name: Install system packages
+      if: steps.apt-cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        export DEBIAN_FRONTEND=noninteractive
+        start=$(date +%s)
+        sudo ./tools/install_ubuntu_dependencies.sh
+        end=$(date +%s)
+        echo "Execution time: $((end - start)) seconds"
+        start=$(date +%s)
+        sudo apt-get -y --no-install-recommends install \
+          alien \
+          gnome-screenshot \
+          pulseaudio \
+          python3-tk \
+          x11-xserver-utils
+        end=$(date +%s)
+        echo "✅ Packages installed in $((end - start)) seconds"
+
+    - name: Install downloaded packages
+      if: steps.apt-cache.outputs.cache-hit == 'true'
       shell: bash
       run: |
         start=$(date +%s)
-        sudo apt-get update
-        sudo DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install \
-          alien \
-          capnproto \
-          ffmpeg \
-          gcc-arm-none-eabi \
-          gnome-screenshot \
-          libavcodec-dev \
-          libavdevice-dev \
-          libavfilter-dev \
-          libavformat-dev \
-          libavutil-dev \
-          libbz2-dev \
-          libcapnp-dev \
-          libcurl4-openssl-dev \
-          libeigen3-dev \
-          libglew-dev \
-          libgles2-mesa-dev \
-          libglfw3-dev \
-          liblzma-dev \
-          libncurses5-dev \
-          libqt5charts5-dev \
-          libqt5opengl5-dev \
-          libqt5serialbus5-dev \
-          libqt5svg5-dev \
-          libqt5x11extras5-dev \
-          libsystemd-dev \
-          libusb-1.0-0-dev \
-          libzmq3-dev \
-          libzstd-dev \
-          ocl-icd-libopencl1 \
-          ocl-icd-opencl-dev \
-          opencl-headers \
-          portaudio19-dev \
-          pulseaudio \
-          python3-tk \
-          qt5-qmake \
-          qtbase5-dev \
-          qtbase5-dev-tools \
-          qtchooser \
-          qttools5-dev-tools \
-          x11-xserver-utils 
+        cd ~/apt-cache/archives
+        sudo dpkg -i *.deb || sudo apt-get install -f -y
         end=$(date +%s)
-        echo "✅ Packages installed in $((end - start)) seconds"
+        echo "Execution time: $((end - start)) seconds"
 
     - name: Install python packages
       uses: astral-sh/setup-uv@v4
