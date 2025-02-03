@@ -2,6 +2,11 @@
 # repack_all.sh
 # This script repacks every installed package into a .deb file
 # and moves them into the current directory.
+# Store the current directory
+original_dir=$(pwd)
+
+# Ensure the script returns to the original directory on exit
+trap 'cd ".github/workflows/setup"' EXIT
 
 # Set the target directory to the current directory
 TARGET_DIR="."
