@@ -1,21 +1,67 @@
 #!/bin/bash
-# repack_all.sh
-# This script repacks every installed package into a .deb file
+# repack_selected.sh
+# This script repacks a selected list of packages into .deb files
 # and moves them into the current directory.
-
-cd ~/apt-cache/archives
+#
+# Make sure dpkg-repack is installed:
+#   sudo apt-get install dpkg-repack fakeroot
+#
+# Define the list of packages to repack.
+packages=(
+  alien
+  build-essential
+  capnproto
+  ffmpeg
+  gcc-arm-none-eabi
+  gnome-screenshot
+  libavcodec-dev
+  libavdevice-dev
+  libavfilter-dev
+  libavformat-dev
+  libavutil-dev
+  libbz2-dev
+  libcapnp-dev
+  libcurl4-openssl-dev
+  libeigen3-dev
+  libffi-dev
+  libglew-dev
+  libgles2-mesa-dev
+  libglfw3-dev
+  liblzma-dev
+  libncurses5-dev
+  libqt5charts5-dev
+  libqt5opengl5-dev
+  libqt5serialbus5-dev
+  libqt5svg5-dev
+  libqt5x11extras5-dev
+  libsystemd-dev
+  libusb-1.0-0-dev
+  libzmq3-dev
+  libzstd-dev
+  ocl-icd-libopencl1
+  ocl-icd-opencl-dev
+  opencl-headers
+  portaudio19-dev
+  pulseaudio
+  python3-dev
+  python3-tk
+  python3-venv
+  qt5-qmake
+  qtbase5-dev
+  qtbase5-dev-tools
+  qtchooser
+  qttools5-dev-tools
+  x11-xserver-utils
+)
 
 # Set the target directory to the current directory
 TARGET_DIR="."
 
-# Get a list of all installed packages using dpkg-query
-PACKAGE_LIST=$(dpkg-query -W -f='${Package}\n')
-
-echo "Repacking all installed packages..."
+echo "Repacking selected packages..."
 echo
 
 # Loop over each package and repack it
-for pkg in $PACKAGE_LIST; do
+for pkg in "${packages[@]}"; do
     echo "Repacking package: $pkg"
     dpkg-repack "$pkg"
     if [ $? -eq 0 ]; then
