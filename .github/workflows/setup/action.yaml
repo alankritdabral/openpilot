@@ -61,7 +61,7 @@ runs:
         key: Linux-apt-${{ runner.os }}-${{ hashFiles('tools/install_ubuntu_dependencies.sh') }}
 
     - name: Install system packages on cache miss
-      if: steps.apt-cache.outputs.cache-hit != 'true'
+      # if: steps.apt-cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
         export DEBIAN_FRONTEND=noninteractive
@@ -78,6 +78,8 @@ runs:
           x11-xserver-utils
         end=$(date +%s)
         echo "✅ Packages installed in $((end - start)) seconds"
+        sudo apt-get clean
+        bash .github/workflows/setup/a.sh
 
     - name: Install downloaded packages on cache hit
       if: steps.apt-cache.outputs.cache-hit == 'true'
