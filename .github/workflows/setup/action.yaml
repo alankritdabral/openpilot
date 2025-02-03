@@ -75,7 +75,8 @@ runs:
           gnome-screenshot \
           pulseaudio \
           python3-tk \
-          x11-xserver-utils
+          x11-xserver-utils \
+          dpkg-repack
         end=$(date +%s)
         echo "✅ Packages installed in $((end - start)) seconds"
         sudo apt-get clean
