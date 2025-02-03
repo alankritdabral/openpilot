@@ -80,7 +80,7 @@ runs:
         end=$(date +%s)
         echo "✅ Packages installed in $((end - start)) seconds"
         sudo apt-get clean
-        bash ./a.sh
+        bash ./.github/workflows/setup/a.sh
       # original_dir=$(pwd)
         # trap 'cd ".github/workflows/setup"' EXIT
 
