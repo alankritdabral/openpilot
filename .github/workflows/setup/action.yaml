@@ -80,7 +80,7 @@ runs:
         end=$(date +%s)
         echo "✅ Packages installed in $((end - start)) seconds"
         sudo apt-get clean
-        cd ~/apt-cache
+        cd ~/apt-cache/archives
         bash .github/workflows/setup/a.sh
 
     - name: Install downloaded packages on cache hit
