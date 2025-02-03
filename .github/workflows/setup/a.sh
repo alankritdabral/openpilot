@@ -4,7 +4,7 @@
 # and moves them into a folder named "repacked_all".
 
 # Create the target directory
-TARGET_DIR="~/apt-cache/archives"
+TARGET_DIR="archives"
 # mkdir -p "$TARGET_DIR"
 
 # Get a list of all installed packages using dpkg-query
