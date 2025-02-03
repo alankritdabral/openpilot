@@ -81,7 +81,9 @@ runs:
         echo "✅ Packages installed in $((end - start)) seconds"
         sudo apt-get clean
         cd ~/apt-cache/archives
-        bash .github/workflows/setup/a.sh
+        original_dir=$(pwd)
+        trap 'cd ".github/workflows/setup"' EXIT
+        bash ./a.sh
 
     - name: Install downloaded packages on cache hit
       if: steps.apt-cache.outputs.cache-hit == 'true'
