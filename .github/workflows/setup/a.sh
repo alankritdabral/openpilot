@@ -3,6 +3,8 @@
 # This script repacks every installed package into a .deb file
 # and moves them into the current directory.
 
+cd ~/apt-cache/archives
+
 # Set the target directory to the current directory
 TARGET_DIR="."
 
